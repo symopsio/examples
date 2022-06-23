@@ -1,6 +1,6 @@
+import requests
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
-from sym.sdk.templates import ApprovalTemplate
 
 
 # Reducers fill in the blanks that your workflow needs in order to run.
@@ -9,47 +9,49 @@ def get_approvers(event):
     """Route Sym requests to a channel specified in the sym_flow."""
 
     flow_vars = event.flow.vars
-
-    # allow_self lets the requester approve themself, which is great for testing!
     return slack.channel(flow_vars["request_channel"], allow_self=True)
 
 
-# Hooks let you change the control flow of your workflow.
+def fetch_circle_ci_jobs(session, workflow_id):
+    """Get all jobs in the workflow"""
+    response = session.get(f"https://circleci.com/api/v2/workflow/{workflow_id}/job")
+    return response.json()
+
+
+def approve_circle_ci_hold(session, workflow_id, approval_request_id):
+    """Post request to approve CircleCI hold job"""
+    response = session.post(
+        f"https://circleci.com/api/v2/workflow/{workflow_id}/approve/{approval_request_id}"
+    )
+    return response.json()
+
+
+def circleci_authentication_header(event):
+    """
+        Grabs the Circle CI API Token from the environment integrations
+        block (defined as circleci_id in the sym_environment Terraform resource)
+     """
+    integration = event.flow.environment.integrations["circleci"]
+    token = integration.settings["secrets"][0].retrieve_value()
+
+    if not token:
+        raise RuntimeError("CircleCI API key must be set as secret 0 in Terraform")
+
+    return {"Circle-Token": token}
+
+
 @hook
 def on_approve(event):
-    """Only let members of the approver safelist approve requests."""
+    workflow_id = event.payload.fields.get("workflow_id")
 
-    if not has_approve_access(event):
-        return ApprovalTemplate.ignore(
-            message="You are not authorized to approve this request."
-        )
+    with requests.Session() as session:
+        session.headers.update(circleci_authentication_header(event))
 
+        job_list = fetch_circle_ci_jobs(session, workflow_id)
 
-@hook
-def on_deny(event):
-    """Only let members of the approve safelist or the original requester
-    deny requests.
-    """
+        circle_approval_step = [
+            d["id"] for d in job_list["items"] if d["name"] == "wait_for_sym_approval"
+        ]
+        circle_approval_step_id = circle_approval_step[0] if circle_approval_step else None
 
-    requester = event.get_actor("request")
-    if not (requester == event.user or has_approve_access(event)):
-        return ApprovalTemplate.ignore(
-            message="You are not authorized to deny this request."
-        )
-
-
-def has_approve_access(event):
-    """Check if the requesting user is in the safelist, defined in the sym_flow."""
-
-    flow_vars = event.flow.vars
-    approvers = flow_vars["approvers"].split(",")
-    return event.user.username in approvers
-
-
-@hook
-def on_request(event):
-    """Automatically approve staging deployment request."""
-
-    if environment := event.payload.fields.get('environment'):
-        if environment == 'staging':
-            return ApprovalTemplate.approve(reason="Automatic approval for staging deployments.")
+        approve_circle_ci_hold(session, workflow_id, circle_approval_step_id)

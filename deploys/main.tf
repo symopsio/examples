@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 provider "sym" {
   org = var.sym_org_slug
 }
@@ -40,12 +44,13 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = var.environment_name
-  runtime_id      = sym_runtime.this.id
+  name       = var.environment_name
+  runtime_id = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
     slack_id = sym_integration.slack.id
+    circleci_id = sym_integration.circleci.id
   }
 }
 
@@ -65,4 +70,61 @@ resource "sym_error_logger" "slack" {
 
 resource "sym_runtime" "this" {
   name = var.environment_name
+}
+
+
+module "runtime_connector" {
+  source  = "terraform.symops.com/symopsio/runtime-connector/sym"
+  version = ">= 1.1.0"
+
+  addons      = ["aws/secretsmgr"]
+  environment = var.environment_name
+
+  sym_account_ids = var.sym_account_ids
+}
+
+# Secrets storage that Sym integrations can refer to
+resource "sym_secrets" "this" {
+  type = "aws_secrets_manager"
+  name = var.environment_name
+
+  settings = {
+    context_id = sym_integration.runtime_context.id
+  }
+}
+
+
+# This will be used by Sym `on_approve` hook to resume the CircleCI workflow.
+resource "aws_secretsmanager_secret" "circleci_api_key" {
+  name                    = "sym/${var.environment_name}/circleci-api-key"
+  description             = "CircleCI API key for the Sym deploy flow"
+
+  tags             = {
+    "SymEnv" = var.environment_name
+  }
+}
+
+resource "sym_secret" "circleci_api_key" {
+  path      = aws_secretsmanager_secret.circleci_api_key.name
+  source_id = sym_secrets.this.id
+}
+
+# The base permissions that a workflow has access to
+resource "sym_integration" "runtime_context" {
+  type = "permission_context"
+  name = "runtime-${var.environment_name}"
+
+  external_id = module.runtime_connector.settings.account_id
+  settings    = module.runtime_connector.settings
+
+}
+
+resource "sym_integration" "circleci" {
+    type = "custom"
+    name = "circleci"
+    external_id = "symopsio"
+
+    settings = {
+        secret_ids_json = jsonencode([sym_secret.circleci_api_key.id])
+    }
 }
