@@ -2,6 +2,13 @@ provider "sym" {
   org = var.sym_org_slug
 }
 
+# If you have a lambda already Terraformed, replace the references to data.aws_lambda_function.your_lambda
+# with references to your aws_lambda_function resource and remove this data resource.
+# If you created your lambda manually in the AWS Console, replace the function_name with your lambda's function name.
+data "aws_lambda_function" "your_lambda" {
+  function_name = "your-lambda-function"
+}
+
 resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
@@ -10,7 +17,13 @@ resource "sym_flow" "this" {
   implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id
 
-  vars = var.flow_variables
+  vars = merge(
+    var.flow_variables,
+    {
+      # Make your lambda ARN automagically available in your impl.py
+      lambda_arn = data.aws_lambda_function.your_lambda.arn
+    }
+  )
 
   params = {
     # prompt_fields_json defines custom form fields for the Slack modal that
@@ -41,6 +54,9 @@ resource "sym_environment" "this" {
 
   integrations = {
     slack_id = sym_integration.slack.id
+
+    # This `aws_lambda_id` is required to be able to use the `aws_lambda` SDK methods
+    aws_lambda_id = sym_integration.lambda_context.id
   }
 }
 
@@ -60,4 +76,45 @@ resource "sym_error_logger" "slack" {
 
 resource "sym_runtime" "this" {
   name = var.environment_name
+
+  # Give the Sym Runtime the permissions defined by the runtime_connector module.
+  context_id = sym_integration.runtime_context.id
+}
+
+# Creates an AWS IAM Role that the Sym Runtime can use for execution
+# Allow the runtime to assume roles in the /sym/ path in your AWS Account
+module "runtime_connector" {
+  source  = "terraform.symops.com/symopsio/runtime-connector/sym"
+  version = ">= 1.1.0"
+
+  environment     = var.environment_name
+}
+
+# An Integration that tells the Sym Runtime resource which AWS Role to assume
+# (The AWS Role created by the runtime_connector module)
+resource "sym_integration" "runtime_context" {
+  type = "permission_context"
+  name = "runtime-${var.environment_name}"
+
+  external_id = module.runtime_connector.settings.account_id
+  settings    = module.runtime_connector.settings
+}
+
+# The AWS IAM Resources that enable Sym to invoke your Lambda functions.
+module "lambda_connector" {
+  source  = "terraform.symops.com/symopsio/lambda-connector/sym"
+  version = ">= 1.12.0"
+
+  environment       = var.environment_name
+  lambda_arns       = [data.aws_lambda_function.your_lambda.arn]
+  runtime_role_arns = [module.runtime_connector.settings.role_arn]
+}
+
+# The Integration your Strategy uses to invoke Lambdas.
+resource "sym_integration" "lambda_context" {
+  type = "permission_context"
+  name = "lambda-context-${var.environment_name}"
+
+  external_id = module.lambda_connector.settings.account_id
+  settings    = module.lambda_connector.settings
 }
