@@ -36,6 +36,12 @@ resource "sym_flow" "this" {
         label    = "User who merged PR"
         type     = "string"
         required = true
+      },
+      {
+        name     = "workflow_id"
+        label    = "CircleCI workflow"
+        type     = "string"
+        required = true
       }
     ])
   }
@@ -44,12 +50,12 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name       = var.environment_name
-  runtime_id = sym_runtime.this.id
+  name            = var.environment_name
+  runtime_id      = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
-    slack_id = sym_integration.slack.id
+    slack_id    = sym_integration.slack.id
     circleci_id = sym_integration.circleci.id
   }
 }
@@ -96,10 +102,10 @@ resource "sym_secrets" "this" {
 
 # This will be used by Sym `on_approve` hook to resume the CircleCI workflow.
 resource "aws_secretsmanager_secret" "circleci_api_key" {
-  name                    = "sym/${var.environment_name}/circleci-api-key"
-  description             = "CircleCI API key for the Sym deploy flow"
+  name        = "sym/${var.environment_name}/circleci-api-key"
+  description = "CircleCI API key for the Sym deploy flow"
 
-  tags             = {
+  tags = {
     "SymEnv" = var.environment_name
   }
 }
@@ -120,11 +126,11 @@ resource "sym_integration" "runtime_context" {
 }
 
 resource "sym_integration" "circleci" {
-    type = "custom"
-    name = "circleci"
-    external_id = "symopsio"
+  type        = "custom"
+  name        = "circleci"
+  external_id = "symopsio"
 
-    settings = {
-        secret_ids_json = jsonencode([sym_secret.circleci_api_key.id])
-    }
+  settings = {
+    secret_ids_json = jsonencode([sym_secret.circleci_api_key.id])
+  }
 }
