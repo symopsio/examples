@@ -1,5 +1,5 @@
 # Invoking AWS Lambda from impl.py
-This section illustrates how to use the aws_lambda.invoke and aws_lambda.invoke_async Sym SDK methods in your impl.py.
+This section illustrates how to use the `aws_lambda.invoke` and `aws_lambda.invoke_async` Sym SDK methods in your impl.py.
 
 ## Tutorial
 
