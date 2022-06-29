@@ -145,6 +145,7 @@ resource "sym_flow" "this" {
     ])
   }
 }
+############ Basic Environment Setup ##############
 
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
