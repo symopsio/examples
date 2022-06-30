@@ -10,7 +10,8 @@ Full Sym docs can be found here:
 ## Content
 Each folder in this repo represents a full end to end Sym Flow.
 
-| Example                                          | Description                                                    |
-|--------------------------------------------------|----------------------------------------------------------------|
-| [Approval-Only Flow](approvals)                  | A foundational Sym Flow for audited approvals                  |
-| [Invoke AWS Lambda from impl.py](aws_lambda_sdk) | A Sym Flow that invokes an AWS Lambda from a hook in `impl.py` |
+| Example                                                 | Description                                                                                                            |
+|---------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| [Approval-Only Flow](approvals)                         | A foundational Sym Flow for audited approvals                                                                          |
+| [Invoke AWS Lambda from impl.py](aws_lambda_sdk)        | A Sym Flow that invokes an AWS Lambda from a hook in `impl.py`                                                         |
+| [Approve a CircleCI Job from Sym](approve_circleci_job) | A Sym Flow that is triggered from CircleCI by the Sym Orb and then resumes the paused CircleCI workflow after approval |
