@@ -1,16 +1,17 @@
-# Sym Approvals Quickstart
+# Approving a CircleCI Job with Sym
+This section illustrates how to use the [Sym Orb](https://circleci.com/developer/orbs/orb/sym/sym) in your CircleCI pipeline and how to approve a CircleCI job with hooks
 
-This is a starter template to get a Sym Deployment Approval Flow set up for your team.
-
+## Turotial
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/circleci-and-sym).
 
 # Sequence diagram of the approval process
 
 ![](img/deploy_sequence.jpg)
 
-## Gating a CircleCI step with a Sym Approval
+## Gating a CircleCI job with a Sym Approval
 
-This approval flow will get triggered once the `sym/request` step is reached in a CircleCI workflow. Once approved, Sym will resume the workflow from the `wait_for_sym_approval` step.
-
+This approval flow will be triggered by the `sym/request` job in your CircleCI workflow.
+Once approved, Sym will automatically resume the workflow after the `wait_for_sym_approval` job.
 
 ```yaml
 # Add the Sym orb to your config.yml
@@ -32,13 +33,14 @@ workflows:
             - terraform_acceptance_test
           context: sym-bot-token
 
-      # Once approved, Sym will resume CircleCI flow from this step.
+      # The workflow will pause here and wait for approval.
+      # Once approved, Sym will approve this job to continue the workflow
       - wait_for_sym_approval:
           type: approval
           requires:
             - sym/request
 
-      # This is the step gated by Sym approval
+      # After approving the Sym request in Slack, CircleCI will continue to this job
       - deploy_prod:
           requires:
             - wait_for_sym_approval
