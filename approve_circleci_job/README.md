@@ -1,7 +1,7 @@
 # Approving a CircleCI Job with Sym
 This section illustrates how to use the [Sym Orb](https://circleci.com/developer/orbs/orb/sym/sym) in your CircleCI pipeline and how to approve a CircleCI job with hooks
 
-## Turotial
+## Tutorial
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/circleci-and-sym).
 
 # Sequence diagram of the approval process
