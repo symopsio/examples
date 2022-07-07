@@ -6,10 +6,9 @@ from sym.sdk.integrations import slack
 # Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
 def get_approvers(event):
-    """Route Sym requests to a channel specified in the sym_flow."""
+    """Route Sym requests to a specified channel."""
 
-    flow_vars = event.flow.vars
-    return slack.channel(flow_vars["request_channel"], allow_self=True)
+    return slack.channel("#circleci-deploys")
 
 
 def fetch_circle_ci_jobs(session, workflow_id):
@@ -45,13 +44,17 @@ def on_approve(event):
     workflow_id = event.payload.fields.get("workflow_id")
 
     with requests.Session() as session:
+        # Include the Circle CI Token in all subsequent requests
         session.headers.update(circleci_authentication_header(event))
 
+        # Get all the jobs in this workflow
         job_list = fetch_circle_ci_jobs(session, workflow_id)
 
+        # Get the `wait_for_sym_approval` job ID, which is the paused job
         circle_approval_step = [
             d["id"] for d in job_list["items"] if d["name"] == "wait_for_sym_approval"
         ]
         circle_approval_step_id = circle_approval_step[0] if circle_approval_step else None
 
+        # Resume the CircleCI workflow by approving the paused job
         approve_circle_ci_hold(session, workflow_id, circle_approval_step_id)
