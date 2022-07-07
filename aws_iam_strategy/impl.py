@@ -1,4 +1,4 @@
-from sym.sdk.annotations import hook, reducer
+from sym.sdk.annotations import reducer
 from sym.sdk.integrations import slack
 
 
