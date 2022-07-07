@@ -1,6 +1,6 @@
 # AWS IAM Group Access Strategy
 
-This example illustrates how to implement a Sym Flow that uses an Okta Access Strategy to grant users temporary access to an AWS IAM Group.
+This example illustrates how to implement a Sym Flow that uses an AWS IAM Access Strategy to grant users temporary access to an AWS IAM Group.
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/dfea5ed...11b311f)
 
