@@ -4,6 +4,9 @@ This section illustrates how to use the [Sym Orb](https://circleci.com/developer
 ## Tutorial
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/circleci-and-sym).
 
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/773fb4817f67cd4390278cbb756e51b13fbf8603...ab3b305d0b97aa9167ec9b948322629f7e19125c)
+
+
 # Sequence diagram of the approval process
 
 ![](img/deploy_sequence.jpg)

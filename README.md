@@ -19,3 +19,4 @@ Each folder in this repo represents a full end to end Sym Flow.
 | [Custom Escalation with AWS Lambda](aws_lambda_strategy)     | A Sym Flow that invokes an AWS Lambda for custom access management                                                     |
 | [Okta Group Escalation](okta_access_strategy)                | A Sym Flow that escalates the requester to an Okta Group                                                               |
 | [Auto-approve PagerDuty On-call Engineer](pagerduty_on_call) | A Sym Flow that auto-approves requests if the requester is on-call in PagerDuty                                        |
+| [Tailscale SSH Access](tailscale_ssh_access)                 | A Sym Flow that escalates the requester to a Tailscale Group with SSH access                                           |

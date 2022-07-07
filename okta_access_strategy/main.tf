@@ -45,17 +45,19 @@ resource "aws_secretsmanager_secret" "okta_api_key" {
   description = "API Key for Sym to call Okta APIs"
 
   tags = {
+    # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
+    # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
     SymEnv = "main"
   }
 }
 
-# This resources tells Sym how to access your Okta API Key.
+# This resource tells Sym how to access your Okta API Key.
 resource "sym_secret" "okta_api_key" {
   # The source of your secrets and the permissions needed to access
   # i.e. AWS Secrets Manager, access with IAM Role.
   source_id = sym_secrets.this.id
 
-  #name of the key in AWS Secrets Manager
+  # Name of the key in AWS Secrets Manager
   path      = aws_secretsmanager_secret.okta_api_key.name
 }
 
@@ -172,6 +174,7 @@ resource "sym_integration" "slack" {
   type = "slack"
   name = "main-slack"
 
+  # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
 }
 
