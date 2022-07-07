@@ -2,7 +2,7 @@
 
 This example illustrates how to implement a Sym Flow that uses a Tailscale Access Strategy to grant users temporary SSH access to devices.
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/quickstarts/compare/67553549...00062b0)
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/67553549...00062b0)
 
 ## Example ACL
 
