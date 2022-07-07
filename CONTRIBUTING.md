@@ -50,7 +50,7 @@ You can do this with:
 ### Tips & Recommendations
 - Avoid variables unless they are absolutely necessary, this helps make examples easily understandable at a glance.
 - Comment each resource describing what it does.
-- Structure the order of the resources so that if `resource-A` references `resource-B`, then `resource-A` is declared first.
+- Structure the order of the resources so that if `resource-A` references `resource-B`, then `resource-B` is declared first.
     - e.g. if `sym_integration` needs a `sym_secret`, the `sym_secret` should be declared first.
 - Recommended order of resources:
     - AWS Secrets Manager resources
