@@ -27,7 +27,7 @@ This document describes a set of steps for how to create a structurally consiste
 ### Implementing & Creating the Diff Link
 In order to create a linked Diff for the README, you will need a commit containing just the basic approval, and the commit after you have implemented your example.
 You can do this with:
-1. `git cherry-pick 45d946e1f939032fec5bc1d55988f5e438c7b733`
+1. `git cherry-pick ee6c4f264d2d237d1f0971e7bdf801a6695409d3`
 	- (This commit is from the [approval-base](https://github.com/symopsio/examples/tree/approval-base) branch)
 2. Rename the `approval-base` folder to your example folder name (e.g. `okta_access_strategy`)
 3. Update the README title and description
