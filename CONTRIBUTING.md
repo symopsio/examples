@@ -4,7 +4,7 @@ This repo contains folders of end-to-end examples containing the minimally neces
 This document describes a set of steps for how to create a structurally consistent example.
 
 ## Structure
-- An example should be as tightly scoped to the feature it is exemplifying.
+- An example should be tightly scoped to the feature it is exemplifying.
 - If possible, there should only be one `main.tf` containing the entire Terraform configuration.
 - Each example should be contained in its own folder, named with underscores (i.e. `okta_access_strategy`)
 
