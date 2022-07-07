@@ -4,6 +4,10 @@ This example illustrates how to implement a Sym Flow that uses a Tailscale Acces
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/67553549...00062b0)
 
+
+https://user-images.githubusercontent.com/13071889/177807055-771c7690-5d3f-4973-a96e-c573ac62bfb9.mov
+
+
 ## Example ACL
 
 This example assumes your Tailnet is set up with at least the following ACL configuration, with groups for `prod` and `staging`. Each group provides SSH access to devices with a matching tag:
