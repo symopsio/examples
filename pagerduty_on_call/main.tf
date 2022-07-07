@@ -102,6 +102,8 @@ resource "sym_flow" "this" {
   }
 }
 
+############ Basic Environment Setup ##############
+
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
@@ -122,6 +124,7 @@ resource "sym_integration" "slack" {
   type = "slack"
   name = "main-slack"
 
+  # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
 }
 
