@@ -172,6 +172,7 @@ resource "sym_integration" "slack" {
   type = "slack"
   name = "main-slack"
 
+  # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
 }
 
