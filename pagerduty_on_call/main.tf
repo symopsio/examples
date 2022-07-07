@@ -74,6 +74,8 @@ resource "sym_integration" "pagerduty" {
   }
 }
 
+############ Basic Approval Flow ##############
+
 resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
