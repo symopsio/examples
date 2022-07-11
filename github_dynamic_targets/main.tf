@@ -82,28 +82,13 @@ resource "sym_integration" "github" {
 resource "sym_target" "private-repo" {
   type = "github_repo"
 
-  name  = "main-private-repo-access"
-  label = "Private Repo"
+  name = "private-repos"
+  label = "Private Repos"
 
-  settings = {
-    # `type=github_repo` sym_targets have a required setting `repo_nae`,
-    # which must be name of the Repository the requester will be escalated to when this target is selected
-    repo_name = "private-repo"
-  }
-}
-
-# A target GitHub repo that your Sym Strategy can manage access to
-resource "sym_target" "other-private-repo" {
-  type = "github_repo"
-
-  name  = "main-other-private-repo-access"
-  label = "Other Private Repo"
-
-  settings = {
-    # `type=github_repo` sym_targets have a required setting `repo_nae`,
-    # which must be name of the Repository the requester will be escalated to when this target is selected
-    repo_name = "other-private-repo"
-  }
+  # A special attribute indicating which settings will be dynamically populated by prompt fields.
+  # In this case, the setting is the required `repo_name` setting. The value will be populated by the
+  # `repo_name` field in the `sym_flow.params.prompt_fields_json` attribute.
+  field_bindings = ["repo_name"]
 }
 
 # The Strategy your Flow uses to escalate to GitHub Repositories
@@ -113,7 +98,7 @@ resource "sym_strategy" "github" {
   integration_id = sym_integration.github.id
 
   # This must be a list of `github_repo` sym_targets that users can request to be escalated to
-  targets = [sym_target.private-repo.id, sym_target.other-private-repo.id]
+  targets = [sym_target.private-repo.id]
 }
 
 resource "sym_flow" "this" {
@@ -132,6 +117,14 @@ resource "sym_flow" "this" {
     # prompt_fields_json defines custom form fields for the Slack modal that
     # requesters fill out to make their requests.
     prompt_fields_json = jsonencode([
+      {
+        # This prompt_field will be used to populate the `repo_name` setting of the GitHub Access Target.
+        # The name must match the setting name and type.
+        name     = "repo_name"
+        label    = "Repository Name"
+        type     = "string"
+        required = true
+      },
       {
         name     = "reason"
         label    = "Why do you need access?"
