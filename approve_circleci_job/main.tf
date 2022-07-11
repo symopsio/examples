@@ -150,7 +150,4 @@ resource "sym_error_logger" "slack" {
 
 resource "sym_runtime" "this" {
   name = "main"
-
-  # Give the Sym Runtime the permissions defined by the runtime_connector module.
-  context_id = sym_integration.runtime_context.id
 }
