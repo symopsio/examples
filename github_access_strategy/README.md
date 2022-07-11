@@ -4,7 +4,7 @@ This example illustrates how to implement a Sym Flow that uses an GitHub Access 
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/4bf0742080fb13ea5aaa96d28b93a11477e8ef9b...3a655c8a363118242dd4c1057d29c4ec90657777)
 
-https://user-images.githubusercontent.com/10479740/178283041-9e18aba2-63d4-46cc-ada7-fe46adfd6bc9.mov
+https://user-images.githubusercontent.com/10479740/178339879-39e1acd3-f502-4ffe-a858-459a1b9a3ae5.mov
 
 ## About Sym
 
