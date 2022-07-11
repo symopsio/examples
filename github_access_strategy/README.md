@@ -1,6 +1,6 @@
 # GitHub Access Strategy
 
-This example illustrates how to implement a Sym Flow that uses an Okta Access Strategy to grant users temporary access to a GitHub Repository.
+This example illustrates how to implement a Sym Flow that uses an GitHub Access Strategy to grant users temporary access to a GitHub Repository.
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/4bf0742080fb13ea5aaa96d28b93a11477e8ef9b...3a655c8a363118242dd4c1057d29c4ec90657777)
 
