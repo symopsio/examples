@@ -5,7 +5,7 @@ Visit the Main Sym Docs for more information about the AWS Lambda Strategy: [Sym
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/520254545f2bdf1ee5004b1d1865ea37fd10b5d2...5182cedd8e2be8f5129453274eaa7d9e174db2c2)
 
-https://user-images.githubusercontent.com/10479740/176749004-d8d7834a-5d1e-4de7-a10b-9c8e1bbc6c1f.mov
+https://user-images.githubusercontent.com/10479740/178775757-808f4324-20a7-4282-9e78-ca25f7d79503.mov
 
 ## About Sym
 
