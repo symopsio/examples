@@ -20,31 +20,31 @@ module "lambda_function" {
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
-module "runtime_connector" {
-  source  = "terraform.symops.com/symopsio/runtime-connector/sym"
-  version = ">= 1.1.0"
+module "runtime-connector" {
+  source  = "symopsio/runtime-connector/sym"
+  version = ">= 1.0.0"
 
   environment = "main"
 }
 
 # An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime_connector module)
+# (The AWS Role created by the runtime-connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
   name = "runtime-main"
 
-  external_id = module.runtime_connector.settings.account_id
-  settings    = module.runtime_connector.settings
+  external_id = module.runtime-connector.settings.account_id
+  settings    = module.runtime-connector.settings
 }
 
 # The AWS IAM Resources that enable Sym to invoke your Lambda functions.
-module "lambda_connector" {
-  source  = "terraform.symops.com/symopsio/lambda-connector/sym"
-  version = ">= 1.12.0"
+module "lambda-connector" {
+  source  = "symopsio/lambda-connector/sym"
+  version = ">= 1.0.0"
 
   environment       = "main"
   lambda_arns       = [module.lambda_function.lambda_function_arn]
-  runtime_role_arns = [module.runtime_connector.settings.role_arn]
+  runtime_role_arns = [module.runtime-connector.settings.role_arn]
 }
 
 # The Integration your Strategy uses to invoke Lambdas.
@@ -52,8 +52,8 @@ resource "sym_integration" "lambda_context" {
   type = "permission_context"
   name = "lambda-context-main"
 
-  external_id = module.lambda_connector.settings.account_id
-  settings    = module.lambda_connector.settings
+  external_id = module.lambda-connector.settings.account_id
+  settings    = module.lambda-connector.settings
 }
 
 ############ Flow with Lambda ARN as a Flow Variable ##############
@@ -126,6 +126,6 @@ resource "sym_error_logger" "slack" {
 resource "sym_runtime" "this" {
   name = "main"
 
-  # Give the Sym Runtime the permissions defined by the runtime_connector module.
+  # Give the Sym Runtime the permissions defined by the runtime-connector module.
   context_id = sym_integration.runtime_context.id
 }
