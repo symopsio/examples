@@ -5,7 +5,7 @@ This section illustrates how to use the `aws_lambda.invoke` and `aws_lambda.invo
 
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/enabling-aws-lambda-in-the-sdk).
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/4011115a93ddf9fb094305cf0ba52e9215393260..c8d13811b3606f0aa81b651f63e004c48ef295dc)
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/1c17b3267ae2364ed6d30cbc747f3aa30856aecb...81312a21b0adc0bc4e6e66b8b0e0f4b3d59438a5)
 
 ## About Sym
 
