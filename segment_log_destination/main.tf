@@ -2,6 +2,85 @@ provider "sym" {
   org = "sym-example"
 }
 
+############ General AWS Secrets Manager Setup ##############
+
+# Creates an AWS IAM Role that the Sym Runtime can use for execution
+# Allow the runtime to assume roles in the /sym/ path in your AWS Account
+module "runtime-connector" {
+  source  = "symopsio/runtime-connector/sym"
+  version = ">= 1.0.0"
+
+  # The aws/secretsmgr addon is required to access secrets
+  addons = ["aws/secretsmgr"]
+
+  environment = "main"
+}
+
+# An Integration that tells the Sym Runtime resource which AWS Role to assume
+# (The AWS Role created by the runtime-connector module)
+resource "sym_integration" "runtime_context" {
+  type = "permission_context"
+  name = "main-runtime"
+
+  external_id = module.runtime-connector.settings.account_id
+  settings    = module.runtime-connector.settings
+}
+
+# This resource tells Sym which role to use to access your AWS Secrets Manager
+resource "sym_secrets" "this" {
+  type = "aws_secrets_manager"
+  name = "main-sym-secrets"
+
+  settings = {
+    context_id = sym_integration.runtime_context.id
+  }
+}
+
+############ Segment Integration and Secret Setup ##############
+
+# aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-GITHUB-ACCESS-TOKEN"
+resource "aws_secretsmanager_secret" "segment_write_key" {
+  name        = "main/segment-write-key"
+  description = "Segment Write Key for Sym Audit Logs"
+
+  tags = {
+    # This SymEnv tag is required and MUST match the `environment` in your `runtime-connector` module
+    # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
+    SymEnv = "main"
+  }
+}
+
+resource "sym_secret" "segment_write_key" {
+  # `sym_secrets` is defined in "Manage Secrets with AWS Secrets Manager"
+  source_id = sym_secrets.this.id
+  path      = aws_secretsmanager_secret.segment_write_key.name
+}
+
+resource "sym_integration" "segment" {
+  type = "segment"
+  name = "main-segment-integration"
+
+  # Your Segment Workspace name
+  external_id = "sym-test"
+
+  settings = {
+    # This secret was defined in the previous step
+    write_key_secret = sym_secret.segment_write_key.id
+  }
+}
+
+############ Log Destination Setup ##############
+
+resource "sym_log_destination" "segment" {
+  type           = "segment"
+  integration_id = sym_integration.segment.id
+
+  settings = {
+    # A unique name for this log destination
+    stream_name = "segment-main"
+  }
+}
+
 resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
@@ -38,6 +117,9 @@ resource "sym_environment" "this" {
   name            = "main"
   runtime_id      = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
+
+  # All requests in this environment will be logged and sent to these log destinations
+  log_destination_ids = [sym_log_destination.segment.id]
 
   integrations = {
     slack_id = sym_integration.slack.id

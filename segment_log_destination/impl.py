@@ -8,4 +8,4 @@ def get_approvers(event):
     """Route Sym requests to a channel specified in the sym_flow."""
 
     # allow_self lets the requester approve themself, which is great for testing!
-    return slack.channel("#sym-requests", allow_self=True)
+    return slack.channel("#sym-request", allow_self=True)
