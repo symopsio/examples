@@ -2,6 +2,8 @@
 
 This example shows how to implement a Sym Environment that sends Reporting logs to a Segment Log Destination
 
+https://user-images.githubusercontent.com/10479740/179258502-5f8147a1-970a-43ab-b419-dd334a00c563.mov
+
 ## Tutorial
 
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/segment).
