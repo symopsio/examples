@@ -38,7 +38,7 @@ resource "sym_secrets" "this" {
 
 ############ Segment Integration and Secret Setup ##############
 
-# aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-GITHUB-ACCESS-TOKEN"
+# aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
 resource "aws_secretsmanager_secret" "segment_write_key" {
   name        = "main/segment-write-key"
   description = "Segment Write Key for Sym Audit Logs"
