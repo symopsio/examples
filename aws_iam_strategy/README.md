@@ -6,6 +6,10 @@ A diff between this example and the basic [Approval](../approvals) example: [Dif
 
 https://user-images.githubusercontent.com/10479740/178775713-f73b80f2-58dc-416f-a72c-a02b4ace4c9a.mov
 
+## Tutorial
+
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/aws-iam).
+
 ## About Sym
 
 This workflow is just one example of how [Sym Implementers](https://docs.symops.com/docs/sym-for-implementers) use the [Sym SDK](https://docs.symops.com/docs) to create [Sym Flows](https://docs.symops.com/docs/flows).
