@@ -1,11 +1,11 @@
 # Approving a CircleCI Job with Sym
 This section illustrates how to use the [Sym Orb](https://circleci.com/developer/orbs/orb/sym/sym) in your CircleCI pipeline and how to approve a CircleCI job with hooks
 
-## Tutorial
-Check out a step-by-step tutorial [here](https://docs.symops.com/docs/circleci-and-sym).
-
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/c6453075e3a1d10a7a80b9ec55f0dc5a516044e4...1d9fcbf54d579331a54b8ad0ac9dc5548a30fda7)
 
+## Tutorial
+
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/circleci-and-sym).
 
 # Sequence diagram of the approval process
 

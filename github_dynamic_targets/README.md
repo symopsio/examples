@@ -6,6 +6,10 @@ A diff between this example and the [GitHub Access Strategy](../github_access_st
 
 https://user-images.githubusercontent.com/10479740/178318567-83eca8d4-3def-40d0-a506-dfd2db81f867.mov
 
+## Tutorial
+
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/github#dynamic-github-access-targets).
+
 ## About Sym
 
 This workflow is just one example of how [Sym Implementers](https://docs.symops.com/docs/sym-for-implementers) use the [Sym SDK](https://docs.symops.com/docs) to create [Sym Flows](https://docs.symops.com/docs/flows).
