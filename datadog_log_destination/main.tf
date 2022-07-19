@@ -2,7 +2,7 @@ provider "sym" {
   org = "sym-example"
 }
 
-############ General AWS Secrets Manager Setup ##############
+############ Connecting Sym with your AWS Account with Kinesis Firehose Permissions ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
@@ -10,76 +10,49 @@ module "runtime-connector" {
   source  = "symopsio/runtime-connector/sym"
   version = ">= 1.0.0"
 
-  # The aws/secretsmgr addon is required to access secrets
-  addons = ["aws/secretsmgr"]
-
   environment = "main"
+
+  # the aws/kinesis-firehose addon is required to push logs to Kinesis Firehose -> Datadog
+  addons = ["aws/kinesis-firehose"]
 }
 
-# An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime-connector module)
+# An Integration that tells the Sym Runtime which IAM Role to assume in your Account
+# (The IAM Role created by the runtime-connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
-  name = "main-runtime"
+  name = "runtime-main"
 
-  external_id = module.runtime-connector.settings.account_id
   settings    = module.runtime-connector.settings
+  external_id = module.runtime-connector.settings.account_id
 }
 
-# This resource tells Sym which role to use to access your AWS Secrets Manager
-resource "sym_secrets" "this" {
-  type = "aws_secrets_manager"
-  name = "main-sym-secrets"
+############ Creating a Kinesis Firehose Delivery Stream to Datadog ##############
+
+# This module creates a AWS Kinesis Firehose Delivery Stream that pipes logs to Datadog
+module "datadog-connector" {
+  source  = "symopsio/datadog-connector/sym"
+  version = ">= 1.0.2"
+
+  environment = "main"
+
+  # This variable should NOT be checked into version control!
+  # Set it in an untracked tfvars file (e.g. `secrets.tfvars`)
+  # or as an environment variable: `export TF_VAR_datadog_access_key="my-access-key"`
+  datadog_access_key = var.datadog_access_key
+}
+
+resource "sym_log_destination" "datadog" {
+  type = "kinesis_firehose"
+
+  # The Runtime Permission Context has Kinesis Firehose permissions from the aws/kinesis-firehose add-on
+  integration_id = sym_integration.runtime_context.id
 
   settings = {
-    context_id = sym_integration.runtime_context.id
+    # The firehose stream name is outputted by the datadog-connector module
+    stream_name = module.datadog-connector.firehose_name
   }
 }
 
-############ Segment Integration and Secret Setup ##############
-
-# aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
-resource "aws_secretsmanager_secret" "segment_write_key" {
-  name        = "main/segment-write-key"
-  description = "Segment Write Key for Sym Audit Logs"
-
-  tags = {
-    # This SymEnv tag is required and MUST match the `environment` in your `runtime-connector` module
-    # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
-    SymEnv = "main"
-  }
-}
-
-resource "sym_secret" "segment_write_key" {
-  # `sym_secrets` is defined in "Manage Secrets with AWS Secrets Manager"
-  source_id = sym_secrets.this.id
-  path      = aws_secretsmanager_secret.segment_write_key.name
-}
-
-resource "sym_integration" "segment" {
-  type = "segment"
-  name = "main-segment-integration"
-
-  # Your Segment Workspace name
-  external_id = "sym-test"
-
-  settings = {
-    # This secret was defined in the previous step
-    write_key_secret = sym_secret.segment_write_key.id
-  }
-}
-
-############ Log Destination Setup ##############
-
-resource "sym_log_destination" "segment" {
-  type           = "segment"
-  integration_id = sym_integration.segment.id
-
-  settings = {
-    # A unique name for this log destination
-    stream_name = "segment-main"
-  }
-}
 
 resource "sym_flow" "this" {
   name  = "approval"
@@ -119,7 +92,7 @@ resource "sym_environment" "this" {
   error_logger_id = sym_error_logger.slack.id
 
   # All requests in this environment will be logged and sent to these log destinations
-  log_destination_ids = [sym_log_destination.segment.id]
+  log_destination_ids = [sym_log_destination.datadog.id]
 
   integrations = {
     slack_id = sym_integration.slack.id
