@@ -77,9 +77,14 @@ module "lambda_layer" {
   compatible_runtimes = ["python3.8"]
 
   source_path = [{
-    path             = "${path.module}/src/layer",
+    path             = "${path.module}/src/handler",
     pip_requirements = true,
     prefix_in_zip    = "python",
+    patterns = [
+      "!python/__pycache__/.*",
+      # Exclude files in the top-level directory
+      "!python/[^/]+"
+    ]
   }]
 
   build_in_docker = true

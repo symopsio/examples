@@ -1,6 +1,6 @@
 # Postgres Lambda Strategy
 
-A starter example to implement Postgres Sym Flow that uses an AWS Lambda to manage database user permissions.
+A starter example that implements a Postgres Sym Flow using an AWS Lambda to manage database user permissions.
 
 ## Tutorial
 
