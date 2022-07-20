@@ -23,7 +23,7 @@ Each folder in this repo represents a full end to end Sym Flow.
 | [GitHub Access Strategy with Dynamic Targets](github_dynamic_targets)   | A GitHub Access Strategy that uses Dynamic Targets to populate the repository name                                     |
 | [Okta Group Escalation](okta_access_strategy)                           | A Sym Flow that escalates the requester to an Okta Group                                                               |
 | [Auto-approve PagerDuty On-call Engineer](pagerduty_on_call)            | A Sym Flow that auto-approves requests if the requester is on-call in PagerDuty                                        |
-| [Postgres Access Strategy](postgres_lambda_strategy)                    | A Sym Flow that invokes an AWS Lambda to manage Postgres access                                                        |
+| [Postgres Access Strategy](postgres_lambda_strategy)                    | A Sym Flow that invokes an AWS Lambda to manage access  to an AWS-hosted Postgres instance                                                      |
 | [AWS Kinesis Firehose to S3 Bucket Log Destination](s3_log_destination) | A Sym Environment configured to send logs to an S3 bucket via AWS Kinesis Firehose                                     |
 | [Segment Log Destination](segment_log_destination)                      | A Sym Environment configured to send logs to Segment                                                                   |
 | [Tailscale SSH Access](tailscale_ssh_access)                            | A Sym Flow that escalates the requester to a Tailscale Group with SSH access                                           |

@@ -159,7 +159,7 @@ resource "sym_strategy" "lambda" {
   type = "aws_lambda"
   name = "main-lambda-strategy"
 
-  # The integration
+  # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
   targets        = [sym_target.readonly.id]
 }
