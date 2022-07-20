@@ -6,7 +6,10 @@ provider "sym" {
   org = var.sym_org
 }
 
+data "aws_caller_identity" "current" {}
+
 locals {
+  account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-postgres"
   db_password_key = "/symops.com/${local.function_name}/PG_PASSWORD"
 }
@@ -32,6 +35,22 @@ module "lambda_function" {
   layers = [
     module.lambda_layer.lambda_layer_arn,
   ]
+
+  attach_policy_json = true
+  policy_json = jsonencode({
+    Statement = [{
+      Action = [
+        "ssm:GetParameter*"
+      ],
+      Effect = "Allow"
+      Resource = [
+        "arn:aws:ssm:*:${local.account_id}:parameter/symops.com/${local.function_name}/*"
+      ]
+    }]
+    Version = "2012-10-17"
+  })
+
+  timeout = 10
 
   environment_variables = {
     "PG_HOST"         = var.db_config["host"]
@@ -60,14 +79,11 @@ module "lambda_layer" {
   source_path = [{
     path             = "${path.module}/src/layer",
     pip_requirements = true,
-    patterns         = ["!Dockerfile"],
+    prefix_in_zip    = "python",
   }]
 
-  build_in_docker   = true
-  docker_file       = "${path.module}/src/layer/Dockerfile"
-  docker_build_root = "${path.module}/src/layer"
-  docker_image      = "public.ecr.aws/sam/build-python3.8"
-  runtime           = "python3.8"
+  build_in_docker = true
+  runtime         = "python3.8"
 }
 
 # SSM parameter to store the Postgres password in.
