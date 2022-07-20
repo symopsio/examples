@@ -1,0 +1,4 @@
+# Use the native version of psycopg2 for the Lambda runtime
+boto3
+devtools
+psycopg2-binary

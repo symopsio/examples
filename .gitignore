@@ -34,3 +34,6 @@ builds/
 
 .idea/*
 .vscode/*
+
+# For sym internal testing
+sym.auto.tfvars
