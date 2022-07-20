@@ -1,6 +1,11 @@
+import logging
+
 from psycopg2 import sql
 
 from config import Config
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 def format_sql(username: str, event: dict, config: Config) -> sql.Composable:
@@ -8,6 +13,7 @@ def format_sql(username: str, event: dict, config: Config) -> sql.Composable:
     Get the right sql statement for the supplied event and user
     """
     target_role = resolve_role(event)
+    logger.debug("Target role: %s", target_role)
     event_type = event["event"]["type"]
     if event_type == "escalate":
         return format_grant(target_role, username)

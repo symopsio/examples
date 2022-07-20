@@ -1,4 +1,5 @@
 import json
+import logging
 import sys
 
 from devtools import debug
@@ -6,6 +7,9 @@ from psycopg2 import connect
 
 from config import get_config
 from sql import format_sql
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 def handle(event: dict, context) -> dict:
@@ -15,15 +19,18 @@ def handle(event: dict, context) -> dict:
     For more details on the event object format, refer to our reporting docs:
     https://docs.symops.com/docs/reporting
     """
-    print("Got event:")
-    print(json.dumps(event))
+    logger.debug("Got event: %s", event)
 
     try:
         username = resolve_user(event)
         body = update_user(username, event)
-        return {"body": body, "errors": []}
+        result = {"body": body, "errors": []}
     except Exception as e:
-        return {"body": {}, "errors": [str(e).rstrip()]}
+        logger.error(e)
+        result = {"body": {}, "errors": [str(e).rstrip()]}
+
+    logger.debug("Result: %s", result)
+    return result
 
 
 def resolve_user(event: dict) -> str:
@@ -42,6 +49,7 @@ def update_user(username: str, event: dict) -> dict:
     Grant or revoke the target role for the given user name
     """
     stmt = format_sql(username, event, config)
+    logger.debug("SQL statement: %s", stmt)
     with conn:
         with conn.cursor() as curs:
             curs.execute(stmt)
@@ -72,8 +80,20 @@ def load_event():
     raise RuntimeError("Please supply a json payload via stdin")
 
 
+def log_to_stdout():
+    """Set up the logger to print to stdout for local testing"""
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+
 # Allows local testing using an example json payload from the ../test directory
 if __name__ == "__main__":
+    log_to_stdout()
     event = load_event()
     result = handle(event, {})
     debug(result)
