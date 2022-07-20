@@ -14,12 +14,6 @@ variable "security_group_id" {
   type        = string
 }
 
-variable "sym_org" {
-  description = "Sym organization slug"
-  type        = string
-  default     = "sym-example"
-}
-
 variable "subnet_ids" {
   description = "VPC subnet ids for the function"
   type        = list(string)

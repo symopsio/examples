@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 provider "sym" {
-  org = var.sym_org
+  org = "sym-example"
 }
 
 data "aws_caller_identity" "current" {}
