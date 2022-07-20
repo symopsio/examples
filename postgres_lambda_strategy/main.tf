@@ -29,7 +29,9 @@ module "lambda_function" {
     # Don't do a pip install here since the layer handles this, just
     # package the handler implementation itself.
     pip_requirements = false,
-    patterns         = ["!requirements.txt"],
+    patterns = [
+      "!__pycache__/.*",
+    ]
   }]
 
   layers = [
