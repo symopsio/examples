@@ -14,9 +14,9 @@ Use the outputs of the helper module as input variables to finish setting up an 
 
 ## Local testing
 
-You can iterate on your handler function locally by setting up a docker-compose based Postgres database and then invoking your handler function directly.
+You can iterate on your handler function locally by setting up a docker compose based Postgres database and then invoking your handler function directly.
 
-1. Start the local database with [`docker-compose`](src/test/docker-compose.yaml).
+1. Start the local database with [`docker compose`](src/test/docker-compose.yaml).
 2. Create a test user, database and role with [`init-users.sh`](src/test/init-users.sh).
 3. Copy [`env.example`](src/test/env.example) to `.env` and then `source` it into your shell
 4. Run `pip install -r requirements.txt`

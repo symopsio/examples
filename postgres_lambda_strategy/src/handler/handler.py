@@ -72,6 +72,7 @@ def load_event():
     raise RuntimeError("Please supply a json payload via stdin")
 
 
+# Allows local testing using an example json payload from the ../test directory
 if __name__ == "__main__":
     event = load_event()
     result = handle(event, {})

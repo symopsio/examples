@@ -1,9 +1,3 @@
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "db_config" {
   description = "Connection configuration for your Postgres Database"
   type        = object({ host = string, port = number, user = string, pass = string })
