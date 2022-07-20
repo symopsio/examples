@@ -8,7 +8,7 @@ from psycopg2 import connect
 from config import get_config
 from sql import format_sql
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
@@ -83,12 +83,13 @@ def load_event():
 def log_to_stdout():
     """Set up the logger to print to stdout for local testing"""
     handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
+    # handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     handler.setFormatter(formatter)
-    logger.addHandler(handler)
+    root = logging.getLogger()
+    root.addHandler(handler)
 
 
 # Allows local testing using an example json payload from the ../test directory
