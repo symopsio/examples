@@ -64,6 +64,8 @@ module "lambda_function" {
   vpc_subnet_ids         = var.subnet_ids
   vpc_security_group_ids = [var.security_group_id]
   attach_network_policy  = true
+
+  tags = var.tags
 }
 
 # We must use a layer in order to install the correct native pscopg2 library
@@ -91,6 +93,8 @@ module "lambda_layer" {
 
   build_in_docker = true
   runtime         = "python3.8"
+
+  tags = var.tags
 }
 
 # SSM parameter to store the Postgres password in.
@@ -101,6 +105,8 @@ resource "aws_ssm_parameter" "db_password" {
   name  = local.db_password_key
   type  = "SecureString"
   value = var.db_config["pass"]
+
+  tags = var.tags
 }
 
 ############ Give Sym Runtime Permissions to execute your AWS Lambda ##############
@@ -112,6 +118,8 @@ module "runtime-connector" {
   version = ">= 1.0.0"
 
   environment = "main"
+
+  tags = var.tags
 }
 
 # An Integration that tells the Sym Runtime resource which AWS Role to assume
@@ -132,6 +140,8 @@ module "lambda-connector" {
   environment       = "main"
   lambda_arns       = [module.lambda_function.lambda_function_arn]
   runtime_role_arns = [module.runtime-connector.settings.role_arn]
+
+  tags = var.tags
 }
 
 # The Integration your Strategy uses to invoke Lambdas.
