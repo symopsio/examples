@@ -81,7 +81,8 @@ resource "sym_integration" "aptible" {
   external_id = "94a49e57-d046-4d9d-9dbf-f7711e337368"
 
   settings = {
-    # These secrets were defined in the previous step
+    # `type=aptible` sym_integrations have required settings `username_secret` and `password_secret`,
+    # which must point to sym_secrets referencing your Aptible bot credentials
     username_secret = sym_secret.aptible_bot_username.id
     password_secret = sym_secret.aptible_bot_password.id
   }
