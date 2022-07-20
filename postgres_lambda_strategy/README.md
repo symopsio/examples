@@ -6,6 +6,14 @@ A starter example that implements a Postgres Sym Flow using an AWS Lambda to man
 
 Our step-by-step Lambda [tutorial](https://docs.symops.com/docs/aws-lambda) will get you most of the way through the setup for Postgres.
 
+### Set up Postgres Roles and Users
+
+You need to configure Postgres roles that Sym can grant and revoke access to. Each role should correspond to a `sym_target` in [`main.tf`](main.tf).
+
+You'll also need to ensure you can map users from Sym into your database. There is a placeholder implementation of this in the [`resolve_user`](src/handler/handler.py) method in `handler.py`.
+
+An example script to set up roles and users is in our test [`init-users.sh`](src/test/init-users.sh) script.
+
 ## Example database setup
 
 We've included a [helper module](helper) that you can use to provision a VPC and an RDS Postgres database suitable for testing the integration.
