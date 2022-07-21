@@ -21,7 +21,7 @@ module "db" {
 }
 
 # Set up the Sym Postgres Lambda Function
-module "lambda_function" {
+module "postgres_lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 2.36.0"
 
@@ -41,7 +41,7 @@ module "lambda_function" {
   }]
 
   layers = [
-    module.lambda_layer.lambda_layer_arn,
+    module.postgres_lambda_layer.lambda_layer_arn,
   ]
 
   attach_policy_json = true
@@ -76,7 +76,7 @@ module "lambda_function" {
 
 # We must use a layer in order to install the correct native pscopg2 library
 # for the lambda runtime
-module "lambda_layer" {
+module "postgres_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "~> 2.36.0"
 
@@ -107,7 +107,7 @@ module "lambda_layer" {
 # Ensure your state is encrypted if you configure a production password here,
 # or ignore lifecycle changes and configure the password using a different
 # process.
-resource "aws_ssm_parameter" "db_password" {
+resource "aws_ssm_parameter" "postgres_password" {
   name  = local.db_password_key
   type  = "SecureString"
   value = local.db_config["pass"]
