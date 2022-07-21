@@ -18,14 +18,7 @@ def after_escalate(event):
     # This is equivalent to `get_step_output("escalate")`
     output = get_step_output()
 
-    # The output message is defined in `lambda_src/handler.py`
-    slack.send_message(event.get_actor("request"), output["body"]["message"])
+    # The body is returned from your lambda function
+    username = output["body"]["username"]
 
-
-@hook
-def after_deescalate(event):
-    # This is equivalent to `get_step_output("deescalate")`
-    output = get_step_output()
-
-    # The output message is defined in `lambda_src/handler.py`
-    slack.send_message(event.get_actor("request"), output["body"]["message"])
+    slack.send_message(event.get_actor("request"), f"Escalated db user: {username}")
