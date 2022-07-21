@@ -24,9 +24,9 @@ You can enable the module by setting the `db_enabled` variable to true.
 
 You can iterate on your handler function locally by setting up a docker compose based Postgres database and then invoking your handler function directly.
 
-1. Start the local database with [`docker compose`](src/test/docker-compose.yaml).
-2. Create a test user, database and role with [`init-users.sh`](src/test/init-users.sh).
-3. Copy [`env.example`](src/test/env.example) to `.env` and then `source` it into your shell
+1. Start the local database with [`docker compose up`](src/test/docker-compose.yaml).
+2. Copy [`env.example`](src/test/env.example) to `.env` and then `source` it into your shell
+3. Create a test user, database and role with [`init-users.sh`](src/test/init-users.sh).
 4. Run `pip install -r requirements.txt`
 5. Run `cat ../test/escalate.json | python handler.py` to grant a user access to the readonly role.
 6. Verify the user grants by running `\du` from the `psql` console.
