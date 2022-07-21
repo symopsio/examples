@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 locals {
   rds_name        = "${var.namespace}-example"
   db_name         = "${var.namespace}_master"

@@ -1,9 +1,3 @@
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "db_instance_type" {
   description = "Type of the DB instance"
   type        = string

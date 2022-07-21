@@ -4,7 +4,7 @@ output "bastion_id" {
 }
 
 output "db_config" {
-  description = "The config for the example db if enabled"
+  description = "The config for the example db"
   sensitive   = true
   value = {
     "host" = module.db.cluster_endpoint

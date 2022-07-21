@@ -14,11 +14,11 @@ You'll also need to ensure you can map users from Sym into your database. There 
 
 An example script to set up roles and users is in our test [`init-users.sh`](src/test/init-users.sh) script.
 
-## Example database setup
+### postgres-db module
 
-We've included a [helper module](helper) that you can use to provision a VPC and an RDS Postgres database suitable for testing the integration.
+Enable the [`postgres-db`](postgres-db) module to provision an RDS Postgres database in a VPC that you can use to test the integration.
 
-Use the outputs of the helper module as input variables to finish setting up an end to end example.
+You can enable the module by setting the `db_enabled` variable to true.
 
 ## Local testing
 

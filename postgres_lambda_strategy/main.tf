@@ -12,6 +12,18 @@ locals {
   account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-postgres"
   db_password_key = "/symops.com/${local.function_name}/PG_PASSWORD"
+
+  security_group_id = var.db_enabled ? module.db[0].security_group_id : var.security_group_id
+  subnet_ids        = var.db_enabled ? module.db[0].private_subnet_ids : var.subnet_ids
+  db_config         = var.db_enabled ? module.db[0].db_config : var.db_config
+}
+
+# Optionally set up a database to use for testing the integration
+module "db" {
+  source = "./postgres-db"
+  count  = var.db_enabled ? 1 : 0
+
+  tags = var.tags
 }
 
 # Set up the Sym Postgres Lambda Function
@@ -55,14 +67,14 @@ module "lambda_function" {
   timeout = 10
 
   environment_variables = {
-    "PG_HOST"         = var.db_config["host"]
+    "PG_HOST"         = local.db_config["host"]
     "PG_PASSWORD_KEY" = local.db_password_key
-    "PG_PORT"         = var.db_config["port"]
-    "PG_USER"         = var.db_config["user"]
+    "PG_PORT"         = local.db_config["port"]
+    "PG_USER"         = local.db_config["user"]
   }
 
-  vpc_subnet_ids         = var.subnet_ids
-  vpc_security_group_ids = [var.security_group_id]
+  vpc_subnet_ids         = local.subnet_ids
+  vpc_security_group_ids = [local.security_group_id]
   attach_network_policy  = true
 
   tags = var.tags
@@ -104,7 +116,7 @@ module "lambda_layer" {
 resource "aws_ssm_parameter" "db_password" {
   name  = local.db_password_key
   type  = "SecureString"
-  value = var.db_config["pass"]
+  value = local.db_config["pass"]
 
   tags = var.tags
 }
