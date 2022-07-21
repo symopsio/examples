@@ -18,7 +18,13 @@ def after_escalate(event):
     # This is equivalent to `get_step_output("escalate")`
     output = get_step_output()
 
-    # The body is returned from your lambda function
+    # If there are errors, Sym will DM the user for us so
+    # we don't want to do anything else special here
+    if output["errors"]:
+        return
+
+    # Otherwise use the body returned by the Lambda function to tell the user
+    # what Postgres username got escalated for them.
     username = output["body"]["username"]
 
     slack.send_message(event.get_actor("request"), f"Escalated db user: {username}")
