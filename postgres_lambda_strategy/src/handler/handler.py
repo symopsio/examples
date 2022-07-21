@@ -83,7 +83,6 @@ def load_event():
 def log_to_stdout():
     """Set up the logger to print to stdout for local testing"""
     handler = logging.StreamHandler(sys.stdout)
-    # handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter(
         "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
