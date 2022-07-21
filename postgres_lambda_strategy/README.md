@@ -1,12 +1,12 @@
 # Postgres Lambda Strategy
 
-A starter example that implements a Postgres Sym Flow using an AWS Lambda to manage database user permissions.
+A starter template that implements a Postgres Sym Flow using an AWS Lambda to manage database user permissions.
 
 ## Tutorial
 
 Our step-by-step Lambda [tutorial](https://docs.symops.com/docs/aws-lambda) will get you most of the way through the setup for Postgres.
 
-### Set up Postgres Roles and Users
+### Setting up Postgres roles and users
 
 You need to configure Postgres roles that Sym can grant and revoke access to. Each role should correspond to a `sym_target` in [`main.tf`](main.tf).
 
@@ -14,11 +14,13 @@ You'll also need to ensure you can map users from Sym into your database. There 
 
 An example script to set up roles and users is in our test [`init-users.sh`](lambda_src/test/init-users.sh) script.
 
-### postgres_db module
+## Setting up an example database
 
 Enable the [`postgres_db`](postgres_db) module to provision an RDS Postgres database in a VPC that you can use to test the integration.
 
 You can enable the module by setting the `db_enabled` variable to true.
+
+Refer to the [`README`](postgres_db/README.md) for instructions on tunneling to the example database.
 
 ## Local testing
 
