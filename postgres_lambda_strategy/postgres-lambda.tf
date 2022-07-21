@@ -31,12 +31,13 @@ module "postgres_lambda_function" {
   runtime       = "python3.8"
 
   source_path = [{
-    path = "${path.module}/lambda_src/handler",
+    path = "${path.module}/lambda_src",
     # Don't do a pip install here since the layer handles this, just
     # package the handler implementation itself.
     pip_requirements = false,
     patterns = [
       "!__pycache__/.*",
+      "!test/.*"
     ]
   }]
 
@@ -87,11 +88,12 @@ module "postgres_lambda_layer" {
   compatible_runtimes = ["python3.8"]
 
   source_path = [{
-    path             = "${path.module}/lambda_src/handler",
+    path             = "${path.module}/lambda_src",
     pip_requirements = true,
     prefix_in_zip    = "python",
     patterns = [
       "!python/__pycache__/.*",
+      "!python/test/.*",
       # Exclude files in the top-level directory
       "!python/[^/]+"
     ]

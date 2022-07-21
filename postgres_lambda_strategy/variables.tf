@@ -25,5 +25,5 @@ variable "subnet_ids" {
 variable "tags" {
   description = "Additional tags to apply to resources"
   type        = map(string)
-  default     = {}
+  default     = { "Vendor" = "symops.com" }
 }
