@@ -25,8 +25,7 @@ def format_sql(username: str, event: dict, config: Config) -> sql.Composable:
 
 def resolve_role(event: dict) -> str:
     """Get the role name from the target name"""
-    full_name = event["fields"]["target"]["name"]
-    return full_name.split("-")[-1]
+    return event["fields"]["target"]["name"]
 
 
 def format_grant(rolename: str, username: str) -> sql.Composable:
