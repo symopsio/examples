@@ -1,0 +1,79 @@
+{
+  "id": "38ddcda0-2589-4922-88ce-f5fe4224c51c",
+  "meta": {
+    "schema_version": 6
+  },
+  "state": {
+    "status": "processing",
+    "errors": []
+  },
+  "run": {
+    "srn": "healthy-health:run:postgres:2.0.0:2b1befa5-caf5-4ac3-8509-64732c15cb7d",
+    "parent": "healthy-health:run:flow_selection:1.0.0:267a346a-81ab-4e4b-abca-61f135620a40",
+    "flow": "healthy-health:flow:postgres:2.0.0",
+    "actors": {
+      "prompt": {
+        "user": "healthy-health:user:normal:dead6d58-82f2-46bd-bc70-0590479fa7fc:latest",
+        "name": "",
+        "username": "sym-user@healthy-health.co",
+        "identity": {
+          "service": "slack",
+          "external_id": "T01ABCDEFGH",
+          "user_id": "U01ABCDEFGH"
+        }
+      },
+      "request": {
+        "user": "healthy-health:user:normal:dead6d58-82f2-46bd-bc70-0590479fa7fc:latest",
+        "name": "",
+        "username": "sym-user@healthy-health.co",
+        "identity": {
+          "service": "slack",
+          "external_id": "T01ABCDEFGH",
+          "user_id": "U01ABCDEFGH"
+        }
+      },
+      "approve": {
+        "user": "healthy-health:user:normal:479e17fc-2b72-414d-9c41-ccf199a49b62:latest",
+        "name": "",
+        "username": "sym-implementer@healthy-health.co",
+        "identity": {
+          "service": "slack",
+          "external_id": "T01ABCDEFGH",
+          "user_id": "U01DLRK2491"
+        }
+      }
+    }
+  },
+  "event": {
+    "srn": "sym:event-spec:approval:1.0.0:escalate",
+    "type": "escalate",
+    "template": "sym:template:approval:1.0.0",
+    "timestamp": "2022-05-10T14:47:29.442289",
+    "channel": "slack"
+  },
+  "actor": {
+    "user": "healthy-health:user:normal:479e17fc-2b72-414d-9c41-ccf199a49b62:latest",
+    "name": "",
+    "username": "sym-implementer@healthy-health.co",
+    "identity": {
+      "service": "slack",
+      "external_id": "T01ABCDEFGH",
+      "user_id": "U01DLRK2491"
+    }
+  },
+  "fields": {
+    "reason": "Fix Ticket 123",
+    "duration": 30,
+    "target": {
+      "name": "postgres-readonly",
+      "srn": "healthy-health:access_target:aws_lambda_function:postgres:latest:92e28a63-aedb-4b90-93ad-e4ecba49c9b1",
+      "type": "aws_lambda_function",
+      "label": "Postgres",
+      "settings": {
+        "arn": "arn:aws:lambda:us-east-1:0123456789012:function:sym-postgres-prod"
+      }
+    },
+    "target_id": "92e28a63-aedb-4b90-93ad-e4ecba49c9b1"
+  },
+  "type": "event"
+}
