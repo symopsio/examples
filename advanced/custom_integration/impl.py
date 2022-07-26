@@ -33,14 +33,16 @@ def on_request(event):
         )
 
 
-def get_teams_on_call(integration):
-    """Use the custom integration to hit the VictorOps API to retrieve on call users"""
+def api_request(api_path, integration, params={}):
+    """
+    Hit the given path in the VictorOps API using our custom integration.
+    For details on the API format:
+    https://portal.victorops.com/public/api-docs.html
+    """
 
     # Get the api key we passed in to the integration with the secret_ids_json setting
     token = integration.settings["secrets"][0].retrieve_value()
 
-    # For details on the oncall API format:
-    # https://portal.victorops.com/api-docs/#!/On45call/get_api_public_v1_oncall_current
     headers = {
         "Accept": "application/json",
         # We used the API ID as our custom integration's external ID
@@ -48,7 +50,9 @@ def get_teams_on_call(integration):
         "X-VO-Api-Key": token,
     }
     response = requests.get(
-        "https://api.victorops.com/api-public/v1/oncall/current", headers=headers
+        f"https://api.victorops.com/api-public/{api_path}",
+        headers=headers,
+        params=params,
     )
     body = response.json()
 
@@ -56,7 +60,35 @@ def get_teams_on_call(integration):
         message = body.get("message", "")
         raise RuntimeError(f"API failed with message: {message}")
 
-    return body.get("teamsOnCall", [])
+    return body
+
+
+def find_user_by_email(email, integration):
+    """Hit the VictorOps API to find the username for the given email"""
+    response = api_request("v2/user", integration, params={"email": email})
+    for user in response.get("users", []):
+        return user["username"]
+
+
+def get_custom_user(user, integration):
+    """
+    Each Sym user may have a separate identity stored for each integrated service.
+    Get the VictorOps username associated with the Sym user.
+    """
+    identity = user.identity("custom", integration.external_id)
+    if identity:
+        return identity.user_id
+
+    user_id = find_user_by_email(user.email, integration)
+    if user_id:
+        persist_user_identity(
+            email=user.email,
+            service="custom",
+            service_id=integration.external_id,
+            user_id=user_id,
+        )
+
+    return user_id
 
 
 def is_requester_on_call(event):
@@ -65,16 +97,17 @@ def is_requester_on_call(event):
 
     # Get the custom integration we set up for VictorOps
     integration = event.flow.environment.integrations["victorops"]
-    teams_on_call = get_teams_on_call(integration)
 
-    # Each Sym user may have a separate identity stored for each integrated service.
-    # Get the VictorOps username associated with the Sym user or fall back to
-    # their email address.
-    identity = event.user.identity("custom", integration.external_id)
-    requester_id = event.user.email if not identity else identity.user_id
+    # Get the VictorOps username for the given Sym user. If they don't have a VictorOps
+    # username, then they're not on call!
+    username = get_custom_user(event.user, integration)
+    if not username:
+        return False
 
-    for team in teams_on_call:
+    # See if the user is on call
+    on_call_response = api_request("v1/oncall/current", integration)
+    for team in on_call_response.get("teamsOnCall", []):
         for oncall in team["oncallNow"]:
             for user in oncall["users"]:
-                if user["onCalluser"]["username"] == requester_id:
+                if user["onCalluser"]["username"] == username:
                     return True
