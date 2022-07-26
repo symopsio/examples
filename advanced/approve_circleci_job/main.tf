@@ -2,6 +2,10 @@ provider "sym" {
   org = "sym-example"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 ############ General AWS Secrets Manager Setup ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
@@ -60,7 +64,7 @@ resource "aws_secretsmanager_secret" "circleci_api_key" {
 resource "sym_secret" "circleci_api_key" {
   # The source of your secrets and the permissions needed to access
   # i.e. AWS Secrets Manager, access with IAM Role.
-  path      = aws_secretsmanager_secret.circleci_api_key.name
+  path = aws_secretsmanager_secret.circleci_api_key.name
 
   # Name of the key in AWS Secrets Manager
   source_id = sym_secrets.this.id
@@ -68,8 +72,8 @@ resource "sym_secret" "circleci_api_key" {
 
 # A Custom Integration that can be included in your `sym_environment` so your CircleCI Secret is available in hooks
 resource "sym_integration" "circleci" {
-  type        = "custom"
-  name        = "circleci"
+  type = "custom"
+  name = "circleci"
 
   # A unique ID for this integration
   external_id = "symopsio"
