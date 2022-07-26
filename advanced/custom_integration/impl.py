@@ -73,7 +73,8 @@ def find_user_by_email(email, integration):
 def get_custom_user(user, integration):
     """
     Each Sym user may have a separate identity stored for each integrated service.
-    Get the VictorOps username associated with the Sym user.
+    Get the VictorOps username associated with the Sym user and map it to their Sym
+    user if necessary.
     """
     identity = user.identity("custom", integration.external_id)
     if identity:
@@ -81,6 +82,7 @@ def get_custom_user(user, integration):
 
     user_id = find_user_by_email(user.email, integration)
     if user_id:
+        # Use the Sym SDK to store the user identity so we don't need to look it up again.
         persist_user_identity(
             email=user.email,
             service="custom",
