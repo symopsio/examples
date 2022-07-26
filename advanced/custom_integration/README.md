@@ -1,4 +1,4 @@
-# Using a custom integration in impl.py
+# Using a Custom Integration in impl.py
 
 This example shows how to implement a Flow that uses a Custom Integration to hit an API in impl.py.
 
