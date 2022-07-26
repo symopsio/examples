@@ -72,9 +72,13 @@ def find_user_by_email(email, integration):
 
 def get_custom_user(user, integration):
     """
-    Each Sym user may have a separate identity stored for each integrated service.
-    Get the VictorOps username associated with the Sym user and map it to their Sym
-    user if necessary.
+    Get the VictorOps username for the given Sym user. Each Sym user may have a separate identity
+    stored for each integrated service.
+
+    If the user already has a VictorOps identity, then return it.
+    Otherwise, fetch the identity from VictorOps and persist it.
+
+    Note: You can also use the symflow CLI to custom map user identities if necessary.
     """
     identity = user.identity("custom", integration.external_id)
     if identity:
