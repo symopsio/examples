@@ -67,9 +67,11 @@ def is_requester_on_call(event):
     integration = event.flow.environment.integrations["victorops"]
     teams_on_call = get_teams_on_call(integration)
 
-    # Each Sym user has a separate identity stored for each integrated service.
-    # Get the VictorOps username associated with the Sym user.
-    requester_id = event.user.identity("custom", integration.external_id).user_id
+    # Each Sym user may have a separate identity stored for each integrated service.
+    # Get the VictorOps username associated with the Sym user or fall back to
+    # their email address.
+    identity = event.user.identity("custom", integration.external_id)
+    requester_id = event.user.email if not identity else identity.user_id
 
     for team in teams_on_call:
         for oncall in team["oncallNow"]:
