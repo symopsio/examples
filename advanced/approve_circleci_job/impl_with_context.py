@@ -58,14 +58,16 @@ def circleci_authentication_header(event):
 
 @hook
 def on_request(event):
+    """If the request does not include Terraform files, then auto approve it"""
     context = event.get_context("request")
     diff = context.get("diff.txt", "")
-    if not "terraform" in diff:
+    if not "\.tf" in diff:
         return ApprovalTemplate.approve(reason="No terraform changes, auto approved!")
 
 
 @hook
 def on_approve(event):
+    """Approve the CircleCI job now that the Sym user has approved the flow"""
     workflow_id = event.payload.fields.get("workflow_id")
     if not workflow_id:
         raise ValueError("Missing workflow id")

@@ -54,6 +54,7 @@ def circleci_authentication_header(event):
 
 @hook
 def on_approve(event):
+    """Approve the CircleCI job now that the Sym user has approved the flow"""
     workflow_id = event.payload.fields.get("workflow_id")
     if not workflow_id:
         raise ValueError("Missing workflow id")
