@@ -16,14 +16,12 @@ def get_approvers(event):
 
 
 def find_circleci_approval_job(session, workflow_id):
-    """Get the first paused approval job in the given CircleCI workflow"""
+    """Get the first paused or blocked approval job in the given CircleCI workflow"""
     response = session.get(f"https://circleci.com/api/v2/workflow/{workflow_id}/job")
     body = response.json()
     if not response.ok:
         message = body.get("message", "")
         raise RuntimeError(f"Unable to find jobs for workflow: {message}")
-
-    slack.send_message(slack.user("jon@symops.io"), f"Items: {body}")
 
     for job in body.get("items", []):
         if job["type"] == "approval" and job["status"] in ["on_hold", "blocked"]:

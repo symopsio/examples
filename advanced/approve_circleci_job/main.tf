@@ -90,8 +90,10 @@ resource "sym_flow" "this" {
   label = "CI Approval"
 
   template = "sym:template:approval:1.0.0"
-  #implementation = "${path.module}/impl.py"
-  implementation = "${path.module}/impl_with_context.py"
+
+  implementation = "${path.module}/impl.py"
+  #implementation = "${path.module}/impl_with_context.py"
+
   environment_id = sym_environment.this.id
 
   params = {
