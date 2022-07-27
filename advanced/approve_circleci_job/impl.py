@@ -67,7 +67,7 @@ def no_terraform_files(diff):
 @hook
 def on_request(event):
     """
-    If the request include a diff, then check if this changes includes an Terraform files.
+    If the request include a diff, then check if this changes includes any Terraform files.
     if there are no Terraform files, then auto-approve the request.
     """
     context = event.get_context("request")
