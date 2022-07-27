@@ -1,6 +1,10 @@
 import requests
+
+# import time
+
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
+from sym.sdk.templates import ApprovalTemplate
 
 
 # Reducers fill in the blanks that your workflow needs in order to run.
@@ -50,6 +54,18 @@ def circleci_authentication_header(event):
         raise RuntimeError("CircleCI API key must be set as secret 0 in Terraform")
 
     return {"Circle-Token": token}
+
+
+@hook
+def on_request(event):
+    """
+    If the request include a diff, then check if this changes includes an Terraform files.
+    if there are no Terraform files, then auto-approve the request.
+    """
+    context = event.get_context("request")
+    diff = context.get("diff.txt", "")
+    if not "\.tf" in diff:
+        return ApprovalTemplate.approve(reason="No terraform changes, auto approved!")
 
 
 @hook
