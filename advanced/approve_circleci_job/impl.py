@@ -56,6 +56,14 @@ def circleci_authentication_header(event):
     return {"Circle-Token": token}
 
 
+def no_terraform_files(diff):
+    """Check if the diff has no Terraform files in it"""
+    for path in diff.split("\n"):
+        if path.endswith(".tf"):
+            return False
+    return True
+
+
 @hook
 def on_request(event):
     """
@@ -64,7 +72,7 @@ def on_request(event):
     """
     context = event.get_context("request")
     diff = context.get("diff.txt", "")
-    if not "\.tf" in diff:
+    if no_terraform_files(diff):
         return ApprovalTemplate.approve(reason="No terraform changes, auto approved!")
 
 
