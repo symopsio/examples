@@ -31,5 +31,5 @@ Advanced examples go beyond explaining the basics of Sym resources. Here you'll 
 
 | Advanced Example                                                        | Description                                                                                                            |
 |-------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| [Approve a CircleCI Job from Sym](approve_circleci_job)                 | A Sym Flow that is triggered from CircleCI by the Sym Orb and then resumes the paused CircleCI workflow after approval |
+| [Approve a CircleCI Job from Sym](advanced/approve_circleci_job)        | A Sym Flow that is triggered from CircleCI by the Sym Orb and then resumes the paused CircleCI workflow after approval |
 | [Postgres Access Strategy](advanced/postgres_lambda_strategy)           | A Sym Flow that invokes an AWS Lambda to manage access  to an AWS-hosted Postgres instance                             |
