@@ -17,7 +17,7 @@ Once approved, Sym will automatically resume the workflow after the `wait_for_sy
 ```yaml
 # Add the Sym orb to your config.yml
 orbs:
-  sym: sym/sym@1.0.0
+  sym: sym/sym@1.1
 
 jobs:
   prod-deploy:
