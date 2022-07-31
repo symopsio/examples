@@ -74,7 +74,7 @@
   "fields": {
     "target_id": "92e28a63-aedb-4b90-93ad-e4ecba49c9b1",
     "target": {
-      "name": "postgres-readonly",
+      "name": "readonly",
       "srn": "healthy-health:access_target:aws_lambda_function:postgres:latest:92e28a63-aedb-4b90-93ad-e4ecba49c9b1",
       "type": "aws_lambda_function",
       "label": "Postgres",

@@ -56,10 +56,12 @@ resource "sym_integration" "lambda_context" {
 
 # A target AWS Lambda that will be invoked on escalate and de-escalate.
 # The `name` will be used in the lambda to decide which resource to manage access to
-resource "sym_target" "readonly" {
+resource "sym_target" "postgres_roles" {
+  for_each = { for target in var.postgres_roles : target["name"] => target["label"] }
+
   type  = "aws_lambda_function"
-  name  = "readonly"
-  label = "Readonly"
+  name  = each.key
+  label = each.value
 
   settings = {
     # `type=aws_lambda_function` sym_targets have a required setting `arn`
@@ -75,7 +77,7 @@ resource "sym_strategy" "lambda" {
 
   # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
-  targets        = [sym_target.readonly.id]
+  targets        = [for target in sym_target.postgres_roles : target.id]
 }
 
 # A Sym Flow that executes an AWS Lambda on escalate and de-escalate

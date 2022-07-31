@@ -10,10 +10,15 @@ variable "db_enabled" {
   default     = false
 }
 
-variable "security_group_id" {
-  description = "Lambda security group, required if db_enabled is false"
-  type        = string
-  default     = ""
+variable "postgres_roles" {
+  description = "List of roles to provide access to"
+  type        = list(object({ name = string, label = string }))
+}
+
+variable "security_group_ids" {
+  description = "Lambda security groups, required if db_enabled is false"
+  type        = list(string)
+  default     = []
 }
 
 variable "subnet_ids" {
