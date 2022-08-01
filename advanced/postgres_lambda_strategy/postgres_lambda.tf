@@ -7,9 +7,9 @@ locals {
   function_name   = "sym-postgres"
   db_password_key = "/symops.com/${local.function_name}/PG_PASSWORD"
 
-  security_group_id = var.db_enabled ? module.db[0].security_group_id : var.security_group_id
-  subnet_ids        = var.db_enabled ? module.db[0].private_subnet_ids : var.subnet_ids
-  db_config         = var.db_enabled ? module.db[0].db_config : var.db_config
+  security_group_ids = var.db_enabled ? [module.db[0].security_group_id] : var.security_group_ids
+  subnet_ids         = var.db_enabled ? module.db[0].private_subnet_ids : var.subnet_ids
+  db_config          = var.db_enabled ? module.db[0].db_config : var.db_config
 }
 
 # Optionally set up a database to use for testing the integration
@@ -69,7 +69,7 @@ module "postgres_lambda_function" {
   }
 
   vpc_subnet_ids         = local.subnet_ids
-  vpc_security_group_ids = [local.security_group_id]
+  vpc_security_group_ids = local.security_group_ids
   attach_network_policy  = true
 
   tags = var.tags
@@ -106,13 +106,24 @@ module "postgres_lambda_layer" {
 }
 
 # SSM parameter to store the Postgres password in.
-# Ensure your state is encrypted if you configure a production password here,
-# or ignore lifecycle changes and configure the password using a different
-# process.
+#
+# Ensure your Terraform state is encrypted if you supplied a production
+# password in your db_config.
+#
+# You can also configure a temporary password and uncomment the block
+# below to ignore lifecycle changes. Then you can manage the password outside of
+# the Terraform provisioning lifecycle, and outside of Terraform state.
 resource "aws_ssm_parameter" "postgres_password" {
   name  = local.db_password_key
   type  = "SecureString"
   value = local.db_config["pass"]
 
   tags = var.tags
+
+  /*
+   * Uncomment this to manage the password outside of Terraform state
+  lifecycle {
+    ignore_changes = [value, version]
+  }
+  */
 }
