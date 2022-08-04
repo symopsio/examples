@@ -8,7 +8,7 @@ from sym.sdk.templates import ApprovalTemplate
 def get_approvers(event):
     """Route Sym requests to a channel specified in the sym_flow."""
 
-    # engineering team member requests to a separate channel
+    # Send engineering team member requests to a separate channel
     department = get_user_department(event.user)
     if department == "engineering":
         return slack.channel("#eng-requests", allow_self=True)
