@@ -16,6 +16,7 @@ resource "sym_flow" "this" {
   }
   ...
 }
+```
 
 ## Using profile data ##
 
