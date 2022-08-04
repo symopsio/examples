@@ -126,7 +126,7 @@ resource "sym_environment" "this" {
   integrations = {
     slack_id = sym_integration.slack.id
 
-    # Supply our Okta integraiton ID here so we can use `sym.sdk.integrations.okta`
+    # Supply our Okta integration ID here so we can use `sym.sdk.integrations.okta`
     # methods in the flow implementation
     okta_id = sym_integration.okta.id
   }
