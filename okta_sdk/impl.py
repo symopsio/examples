@@ -25,7 +25,7 @@ def get_user_department(user):
 # Hooks let us wrap events with additional control flow logic
 @hook
 def on_approve(event):
-    """Require approvers to be in the Okta group supplied as a flow variable."""
+    """Require approvers to be in the Okta group defined in our flow variables."""
     if not okta.is_user_in_group(
         event.user, group_id=event.flow.vars["approvers_group"]
     ):
