@@ -6,9 +6,7 @@ from sym.sdk.templates import ApprovalTemplate
 # Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
 def get_approvers(event):
-    """Route Sym requests to a channel specified in the sym_flow."""
-
-    # Send engineering team member requests to a separate channel
+    """Route Sym requests to a channel based on the user's Okta profile."""
     department = get_user_department(event.user)
     if department == "engineering":
         return slack.channel("#eng-requests", allow_self=True)
