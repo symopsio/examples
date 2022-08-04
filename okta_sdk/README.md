@@ -6,7 +6,7 @@ This example illustrates how to use the Okta SDK in your Sym Flow implementation
 
 The Flow implementation declares an [`on_approve`](https://docs.symops.com/docs/hooks#on_approve) hook that checks if the approving user is in a given Okta Group before allowing the approval to continue.
 
-You need to specify a valid Okta Group ID in your `flow_vars` to complete the setup:
+You need to specify a valid Okta Group ID in your `flow_vars` to complete the setup. See our [docs](https://docs.symops.com/docs/okta#add-okta-access-targets) for help on finding an Okta Group ID.
 
 ```
 resource "sym_flow" "this" {

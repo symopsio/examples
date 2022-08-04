@@ -92,6 +92,9 @@ resource "sym_flow" "this" {
     # Replace this with the Okta Group ID (like 00g123456789) that we'll use in
     # the Flow implementation to check if the approving user is authorized to
     # approve this request.
+    #
+    # See our [docs](https://docs.symops.com/docs/okta#add-okta-access-targets)
+    # for help on finding an Okta Group ID.
     approvers_group = "OKTA_GROUP_ID"
   }
 
