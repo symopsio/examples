@@ -89,9 +89,10 @@ resource "sym_flow" "this" {
   environment_id = sym_environment.this.id
 
   vars = {
-    # we will use this in the Flow implementation to check if the approving user
-    # is authorized to approve this request.
-    approvers_group = "00g4fe7l1jPgGOqzA5d7"
+    # Replace this with the Okta Group ID (like 00g123456789) that we'll use in
+    # the Flow implementation to check if the approving user is authorized to
+    # approve this request.
+    approvers_group = "OKTA_GROUP_ID"
   }
 
   params = {
