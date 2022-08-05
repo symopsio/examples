@@ -6,7 +6,7 @@ provider "sym" {
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
-module "runtime-connector" {
+module "runtime_connector" {
   source  = "symopsio/runtime-connector/sym"
   version = ">= 1.0.0"
 
@@ -17,13 +17,13 @@ module "runtime-connector" {
 }
 
 # An Integration that tells the Sym Runtime which IAM Role to assume in your Account
-# (The IAM Role created by the runtime-connector module)
+# (The IAM Role created by the runtime_connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
   name = "runtime-main"
 
-  settings    = module.runtime-connector.settings
-  external_id = module.runtime-connector.settings.account_id
+  settings    = module.runtime_connector.settings
+  external_id = module.runtime_connector.settings.account_id
 }
 
 ############ Creating a Kinesis Firehose Delivery Stream ##############
@@ -51,7 +51,7 @@ resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
   }
 
   tags = {
-    # This SymEnv tag is required and MUST match the `environment` in your `runtime-connector` module
+    # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
     # because the aws/kinesis-firehose add-on only grants access to Firehoses tagged with a matching SymEnv value
     SymEnv = "main"
   }

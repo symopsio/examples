@@ -6,7 +6,7 @@ provider "sym" {
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
-module "runtime-connector" {
+module "runtime_connector" {
   source  = "symopsio/runtime-connector/sym"
   version = ">= 1.0.0"
 
@@ -14,13 +14,13 @@ module "runtime-connector" {
 }
 
 # An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime-connector module)
+# (The AWS Role created by the runtime_connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
   name = "main-runtime"
 
-  external_id = module.runtime-connector.settings.account_id
-  settings    = module.runtime-connector.settings
+  external_id = module.runtime_connector.settings.account_id
+  settings    = module.runtime_connector.settings
 }
 
 # The AWS IAM Resources that enable Sym to manage IAM Groups
@@ -29,7 +29,7 @@ module "iam-connector" {
   version = ">= 1.0.0"
 
   environment       = "main"
-  runtime_role_arns = [module.runtime-connector.settings["role_arn"]]
+  runtime_role_arns = [module.runtime_connector.settings["role_arn"]]
 }
 
 # The Integration your Strategy uses to manage IAM Groups
@@ -133,6 +133,6 @@ resource "sym_error_logger" "slack" {
 resource "sym_runtime" "this" {
   name = "main"
 
-  # Give the Sym Runtime the permissions defined by the runtime-connector module.
+  # Give the Sym Runtime the permissions defined by the runtime_connector module.
   context_id = sym_integration.runtime_context.id
 }

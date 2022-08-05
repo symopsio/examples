@@ -6,7 +6,7 @@ provider "sym" {
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
-module "runtime-connector" {
+module "runtime_connector" {
   source  = "symopsio/runtime-connector/sym"
   version = ">= 1.0.0"
 
@@ -17,13 +17,13 @@ module "runtime-connector" {
 }
 
 # An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime-connector module)
+# (The AWS Role created by the runtime_connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
   name = "main-runtime"
 
-  external_id = module.runtime-connector.settings.account_id
-  settings    = module.runtime-connector.settings
+  external_id = module.runtime_connector.settings.account_id
+  settings    = module.runtime_connector.settings
 }
 
 # This resource tells Sym which role to use to access your AWS Secrets Manager
@@ -44,7 +44,7 @@ resource "aws_secretsmanager_secret" "segment_write_key" {
   description = "Segment Write Key for Sym Audit Logs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the `environment` in your `runtime-connector` module
+    # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
     # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
     SymEnv = "main"
   }
