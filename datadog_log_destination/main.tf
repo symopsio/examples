@@ -6,7 +6,7 @@ provider "sym" {
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
-module "runtime-connector" {
+module "runtime_connector" {
   source  = "symopsio/runtime-connector/sym"
   version = ">= 1.0.0"
 
@@ -17,20 +17,20 @@ module "runtime-connector" {
 }
 
 # An Integration that tells the Sym Runtime which IAM Role to assume in your Account
-# (The IAM Role created by the runtime-connector module)
+# (The IAM Role created by the runtime_connector module)
 resource "sym_integration" "runtime_context" {
   type = "permission_context"
   name = "runtime-main"
 
-  settings    = module.runtime-connector.settings
-  external_id = module.runtime-connector.settings.account_id
+  settings    = module.runtime_connector.settings
+  external_id = module.runtime_connector.settings.account_id
 }
 
 ############ Creating a Kinesis Firehose Delivery Stream to Datadog ##############
 
 # This module creates a AWS Kinesis Firehose Delivery Stream that pipes logs to Datadog
-module "datadog-connector" {
-  source  = "symopsio/datadog-connector/sym"
+module "datadog_connector" {
+  source  = "symopsio/datadog_connector/sym"
   version = ">= 1.0.2"
 
   environment = "main"
@@ -48,8 +48,8 @@ resource "sym_log_destination" "datadog" {
   integration_id = sym_integration.runtime_context.id
 
   settings = {
-    # The firehose stream name is outputted by the datadog-connector module
-    stream_name = module.datadog-connector.firehose_name
+    # The firehose stream name is outputted by the datadog_connector module
+    stream_name = module.datadog_connector.firehose_name
   }
 }
 
