@@ -38,7 +38,7 @@ resource "sym_integration" "runtime_context" {
 }
 
 # The AWS IAM Resources that enable Sym to invoke your Lambda functions.
-module "lambda-connector" {
+module "lambda_connector" {
   source  = "symopsio/lambda-connector/sym"
   version = ">= 1.0.0"
 
@@ -52,8 +52,8 @@ resource "sym_integration" "lambda_context" {
   type = "permission_context"
   name = "lambda-context-main"
 
-  external_id = module.lambda-connector.settings.account_id
-  settings    = module.lambda-connector.settings
+  external_id = module.lambda_connector.settings.account_id
+  settings    = module.lambda_connector.settings
 }
 
 ############ Flow with Lambda ARN as a Flow Variable ##############

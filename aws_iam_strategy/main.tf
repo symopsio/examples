@@ -24,7 +24,7 @@ resource "sym_integration" "runtime_context" {
 }
 
 # The AWS IAM Resources that enable Sym to manage IAM Groups
-module "iam-connector" {
+module "iam_connector" {
   source  = "symopsio/iam-connector/sym"
   version = ">= 1.0.0"
 
@@ -36,8 +36,8 @@ module "iam-connector" {
 resource "sym_integration" "iam_context" {
   type        = "permission_context"
   name        = "main-iam"
-  external_id = module.iam-connector.settings.account_id
-  settings    = module.iam-connector.settings
+  external_id = module.iam_connector.settings.account_id
+  settings    = module.iam_connector.settings
 }
 
 ############ IAM Strategy Setup ##############

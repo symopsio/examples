@@ -32,22 +32,22 @@ resource "sym_integration" "runtime_context" {
 # IAM role the Firehose will assume and the backup S3 bucket.
 # This is not required, as it is just an abstraction of the dependencies.
 # You may declare these resources manually if you wish.
-module "kinesis-firehose-connector" {
+module "kinesis_firehose_connector" {
   source  = "symopsio/kinesis-firehose-connector/sym"
   version = ">= 1.0.0"
 
   environment = "main"
 }
 
-# A Kinesis Firehose Delivery Stream that sends logs to an S3 bucket configured by the kinesis-firehose-connector module
+# A Kinesis Firehose Delivery Stream that sends logs to an S3 bucket configured by the kinesis_firehose_connector module
 resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
   name        = "SymS3ReportingLogsMain"
   destination = "extended_s3"
 
   extended_s3_configuration {
-    # The IAM Role and S3 Bucket are declared by the kinesis-firehose-connector module
-    role_arn   = module.kinesis-firehose-connector.firehose_role_arn
-    bucket_arn = module.kinesis-firehose-connector.firehose_bucket_arn
+    # The IAM Role and S3 Bucket are declared by the kinesis_firehose_connector module
+    role_arn   = module.kinesis_firehose_connector.firehose_role_arn
+    bucket_arn = module.kinesis_firehose_connector.firehose_bucket_arn
   }
 
   tags = {
