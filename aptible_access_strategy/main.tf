@@ -74,6 +74,10 @@ resource "sym_secret" "aptible_bot_password" {
   settings = {
     json_key = "password" # The key to the bot user's password in your JSON secret
   }
+
+  depends_on = [
+    sym_secret.aptible_bot_username
+  ]
 }
 
 # The Aptible Integration that your Sym Strategy uses to manage your Aptible Roles targets
