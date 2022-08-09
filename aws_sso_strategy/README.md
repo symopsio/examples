@@ -2,11 +2,37 @@
 
 This example illustrates how to implement a Sym Flow that uses an AWS SSO Strategy to grant users temporary access to an AWS SSO Permission Set.
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/eae7c3463f1edd910c9768dfa6ae9b5132d6e630...81312a21b0adc0bc4e6e66b8b0e0f4b3d59438a5)
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/5b76c7ec7f23014b8aeb8e09c94165848d90780c...35d1555e66b6d88d6d8e532d157d48b4a1c5b562)
 
 ## Tutorial
 
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/aws-sso).
+
+### A note on AWS Profiles
+
+This example assumes you will configure Sym's runtime into one AWS account, and the SSO connector IAM role into the account where your AWS SSO instance is provisioned.
+
+You should update the provider configurations for each as necessary:
+
+```hcl
+# Set up this AWS provider for the AWS account where Sym's runtime and any other
+# supporting resources for Sym can go, like reporting streams with AWS Kinesis.
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Set up a different provider for the SSO connector.
+# This is because you typically will put your Sym resources in a different
+# AWS account from your AWS SSO instance.
+provider "aws" {
+  alias  = "sso"
+  region = "us-east-1"
+
+  # Change this profile name to a valid AWS profile for the AWS account where
+  # your AWS SSO instance lives.
+  profile = "sso"
+}
+```
 
 ## About Sym
 
