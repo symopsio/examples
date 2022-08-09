@@ -5,7 +5,7 @@ This repo provides full end to end examples for implementing various Sym Flows.
 Full Sym docs can be found here:
 - [Sym Docs](https://docs.symops.com/docs)
 - [Sym SDK](https://sdk.docs.symops.com/)
-- Sym Terraform Provider (Coming Soon!)
+- [Sym Terraform Provider](https://registry.terraform.io/providers/symopsio/sym/latest/docs)
 
 ## Content
 Each folder in this repo represents a full end to end Sym Flow.
