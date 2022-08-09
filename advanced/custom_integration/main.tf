@@ -1,9 +1,9 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 provider "sym" {
   org = "sym-example"
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
 
 ############ General AWS Secrets Manager Setup ##############

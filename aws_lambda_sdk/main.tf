@@ -2,6 +2,10 @@ provider "sym" {
   org = "sym-example"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 # If you have a lambda already Terraformed, replace the references to module.lambda_function
 # with references to your aws_lambda_function resource, and remove this module.
 module "lambda_function" {

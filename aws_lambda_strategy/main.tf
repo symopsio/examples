@@ -1,6 +1,9 @@
 provider "sym" {
-  # Your organization's slug
   org = "sym-example"
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
 
 # In this example, we are terraform a basic lambda function that just prints the event on escalate/de-escalate

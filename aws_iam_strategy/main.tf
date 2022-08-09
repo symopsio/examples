@@ -2,6 +2,10 @@ provider "sym" {
   org = "sym-example"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 ############ Giving Sym Runtime Permissions to Manage your AWS IAM Groups ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
