@@ -2,6 +2,10 @@ provider "sym" {
   org = "sym-example"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 ############ General AWS Secrets Manager Setup ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
