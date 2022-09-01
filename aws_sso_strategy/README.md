@@ -2,7 +2,7 @@
 
 This example illustrates how to implement a Sym Flow that uses an AWS SSO Strategy to grant users temporary access to an AWS SSO Permission Set.
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/5b76c7ec7f23014b8aeb8e09c94165848d90780c...35d1555e66b6d88d6d8e532d157d48b4a1c5b562)
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/5b76c7ec7f23014b8aeb8e09c94165848d90780c...7b0f47fda4d044d5ef5471ce651dfc60567708a8)
 
 ## Tutorial
 
