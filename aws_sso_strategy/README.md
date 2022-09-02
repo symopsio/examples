@@ -1,6 +1,6 @@
-# AWS SSO Access Strategy
+# AWS IAM Identity Center (AWS SSO) Access Strategy
 
-This example illustrates how to implement a Sym Flow that uses an AWS SSO Strategy to grant users temporary access to an AWS SSO Permission Set.
+This example illustrates how to implement a Sym Flow that uses an AWS IAM Identity Center (AWS SSO) Strategy to grant users temporary access to an AWS Permission Set.
 
 A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/5b76c7ec7f23014b8aeb8e09c94165848d90780c...7b0f47fda4d044d5ef5471ce651dfc60567708a8)
 
@@ -8,7 +8,7 @@ A diff between this example and the basic [Approval](../approvals) example: [Dif
 
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/aws-sso).
 
-### A note on AWS Profiles
+### A Note on AWS Profiles
 
 This example assumes you will configure Sym's runtime into one AWS account, and the SSO connector IAM role into the account where your AWS SSO instance is provisioned.
 
