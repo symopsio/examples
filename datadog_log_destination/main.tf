@@ -34,7 +34,7 @@ resource "sym_integration" "runtime_context" {
 
 # This module creates a AWS Kinesis Firehose Delivery Stream that pipes logs to Datadog
 module "datadog_connector" {
-  source  = "symopsio/datadog_connector/sym"
+  source  = "symopsio/datadog-connector/sym"
   version = ">= 1.0.2"
 
   environment = "main"
