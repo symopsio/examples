@@ -1,4 +1,4 @@
-# Temporary EC2 SSH Access with AWS Systems Manager Session Manager
+# JIT EC2 SSH Access with AWS Systems Manager Session Manager
 
 This example illustrates how to implement a Sym Flow that uses an AWS IAM Identity Center (AWS SSO) Strategy to grant users temporary SSH access to an EC2 Instance.
 
