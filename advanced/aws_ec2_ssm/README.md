@@ -4,7 +4,7 @@ This example illustrates how to implement a Sym Flow that uses an AWS IAM Identi
 
 The example relies on [AWS Systems Manager Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) (Session Manager).
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/c8274344897d30da9341ccabdd5352cb4d96241e...7b0f47fda4d044d5ef5471ce651dfc60567708a8)
+A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/1e4b8b03e089b8b55cfd81b8e580637fdc502e79...7b0f47fda4d044d5ef5471ce651dfc60567708a8)
 
 ## Test Bastion Instances
 
