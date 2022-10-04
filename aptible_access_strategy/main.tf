@@ -11,7 +11,7 @@ provider "aws" {
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
-  source  = "symopsio/runtime-connector/sym"
+  source  = "symopsio/runtime-connector/aws"
   version = ">= 1.0.0"
 
   # The aws/secretsmgr addon is required to access secrets

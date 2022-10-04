@@ -30,7 +30,7 @@ data "aws_caller_identity" "sso" {
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
-  source  = "symopsio/runtime-connector/sym"
+  source  = "symopsio/runtime-connector/aws"
   version = ">= 1.0.0"
 
   # Allow the runtime to assume roles in the AWS Account ID where your SSO
@@ -51,7 +51,7 @@ resource "sym_integration" "runtime_context" {
 
 # The AWS IAM Resources that enable Sym to manage SSO Permission Sets
 module "sso_connector" {
-  source  = "symopsio/sso-connector/sym"
+  source  = "symopsio/sso-connector/aws"
   version = ">= 1.0.0"
 
   # Provision the SSO connector in the AWS account where your AWS

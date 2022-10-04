@@ -48,7 +48,7 @@ resource "sym_integration" "slack" {
   type = "slack"
   name = "${var.environment_name}-slack"
 
-  external_id = var.slack_workspace_id
+#  external_id = var.slack_workspace_id
 }
 
 # This sym_error_logger will output any warnings and errors that occur during
