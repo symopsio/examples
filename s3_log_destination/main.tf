@@ -38,7 +38,7 @@ resource "sym_integration" "runtime_context" {
 # You may declare these resources manually if you wish.
 module "kinesis_firehose_connector" {
   source  = "symopsio/kinesis-firehose-connector/aws"
-  version = ">= 1.0.0"
+  version = ">= 3.0.0"
 
   environment = "main"
 }
