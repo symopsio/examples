@@ -25,7 +25,7 @@ module "lambda_function" {
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
-  source  = "symopsio/runtime-connector/sym"
+  source  = "symopsio/runtime-connector/aws"
   version = ">= 1.0.0"
 
   environment = "main"
@@ -43,7 +43,7 @@ resource "sym_integration" "runtime_context" {
 
 # The AWS IAM Resources that enable Sym to invoke your Lambda functions.
 module "lambda_connector" {
-  source  = "symopsio/lambda-connector/sym"
+  source  = "symopsio/lambda-connector/aws"
   version = ">= 1.0.0"
 
   environment       = "main"

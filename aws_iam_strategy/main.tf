@@ -11,7 +11,7 @@ provider "aws" {
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
-  source  = "symopsio/runtime-connector/sym"
+  source  = "symopsio/runtime-connector/aws"
   version = ">= 1.0.0"
 
   environment = "main"
@@ -29,7 +29,7 @@ resource "sym_integration" "runtime_context" {
 
 # The AWS IAM Resources that enable Sym to manage IAM Groups
 module "iam_connector" {
-  source  = "symopsio/iam-connector/sym"
+  source  = "symopsio/iam-connector/aws"
   version = ">= 1.0.0"
 
   environment       = "main"

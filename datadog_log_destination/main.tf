@@ -11,7 +11,7 @@ provider "aws" {
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
-  source  = "symopsio/runtime-connector/sym"
+  source  = "symopsio/runtime-connector/aws"
   version = ">= 1.0.0"
 
   environment = "main"
@@ -34,8 +34,8 @@ resource "sym_integration" "runtime_context" {
 
 # This module creates a AWS Kinesis Firehose Delivery Stream that pipes logs to Datadog
 module "datadog_connector" {
-  source  = "symopsio/datadog-connector/sym"
-  version = ">= 1.0.2"
+  source  = "symopsio/datadog-connector/aws"
+  version = ">= 2.0.0"
 
   environment = "main"
 
