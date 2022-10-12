@@ -8,3 +8,8 @@ output "db_config" {
   sensitive   = true
   value       = var.db_enabled ? module.db[0].db_config : {}
 }
+
+output "user_policy_arn" {
+  description = "Arn of the managed policy that allows users to access their secrets"
+  value       = aws_iam_policy.sym_secrets.arn
+}

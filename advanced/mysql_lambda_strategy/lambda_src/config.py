@@ -1,12 +1,12 @@
 import os
 from dataclasses import dataclass
 
-import boto3
+from boto3.session import Session
 
 
 @dataclass
 class Config:
-    boto_session: boto3.session.Session
+    boto_session: Session
     db_host: str
     db_port: int
     db_user: str
@@ -18,7 +18,7 @@ def get_config() -> Config:
     """
     Loads configuration from environment and SSM
     """
-    session = boto3.session.Session()
+    session = Session()
     return Config(
         db_host=os.environ["DB_HOST"],
         db_port=int(os.environ["DB_PORT"]),
@@ -29,7 +29,7 @@ def get_config() -> Config:
     )
 
 
-def _get_db_password(session: boto3.session.Session) -> str:
+def _get_db_password(session: Session) -> str:
     """
     Check if password is defined as an env var (for local testing)
     otherwise look up the value in Systems Manager Parameter Store.
