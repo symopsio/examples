@@ -53,6 +53,7 @@ def resolve_event(config: Config, event: dict) -> UserEvent:
         event_type=event["event"]["type"],
         run_id=run_id,
         secret_name=f"/symops.com/{config.function_name}/{username}/{run_id}",
+        target=event["fields"]["target"]["name"],
         username=username,
     )
 

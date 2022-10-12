@@ -108,6 +108,7 @@ module "mysql_lambda_layer" {
     prefix_in_zip    = "python",
     patterns = [
       "!python/__pycache__/.*",
+      "!python/targets/.*",
       "!python/test/.*",
       # Exclude files in the top-level directory
       "!python/[^/]+"
