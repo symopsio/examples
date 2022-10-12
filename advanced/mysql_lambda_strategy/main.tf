@@ -76,7 +76,7 @@ resource "sym_target" "readonly" {
   settings = {
     # `type=aws_lambda_function` sym_targets have a required setting `arn`
     # which must be the ARN of the AWS Lambda that will be invoked on escalate and de-escalate
-    arn = module.postgres_lambda_function.lambda_function_arn
+    arn = module.mysql_lambda_function.lambda_function_arn
   }
 }
 
