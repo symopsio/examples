@@ -19,7 +19,6 @@ class UserEvent:
 
     db_user: str
     event_type: str
-    run_id: str
     secret_name: str
     target: str
     username: str

@@ -1,4 +1,6 @@
+import hashlib
 import logging
+import re
 import sys
 
 import botocore
@@ -48,15 +50,30 @@ def resolve_event(config: Config, event: dict) -> UserEvent:
     srn = event["run"]["srn"]
     run_id = SRN.parse(srn).identifier
     username = event["run"]["actors"]["request"]["username"]
-    subject = username.split("@")[0]
     return UserEvent(
-        db_user=subject.replace("-", "_"),
+        db_user=format_db_user(username, run_id),
         event_type=event["event"]["type"],
-        run_id=run_id,
         secret_name=f"/symops.com/{config.function_name}/{username}/{run_id}",
         target=event["fields"]["target"]["name"],
         username=username,
     )
+
+
+def format_db_user(username: str, run_id: str) -> str:
+    """
+    Create a max 32 character database username based on the requesting username
+    and a hash of the current run id
+    """
+    # Get a 24 character hash of the run id
+    run_id_truncated = hashlib.shake_128(run_id.encode()).hexdigest(12)
+
+    # Get the subject from the username if it is an email address
+    subject = username.split("@")[0]
+    # Remove non-word chars from the subject
+    encoded_subject = re.sub(r"[\W]", "", subject)
+
+    # Ensure resulting username is <= 32 chars
+    return encoded_subject[0:12] + run_id_truncated
 
 
 # Initialize stuff outside of the handler code so it can be reused across requests
