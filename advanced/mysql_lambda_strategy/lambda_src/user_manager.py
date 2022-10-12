@@ -6,7 +6,7 @@ import string
 from dataclasses import dataclass
 from typing import Optional
 
-from boto3.session import Session
+from config import Config
 from pymysql.connections import Connection
 
 logger = logging.getLogger(__name__)
@@ -27,8 +27,8 @@ class UserEvent:
 class UserManager:
     """Creates or deletes users given a UserEvent"""
 
-    def __init__(self, session: Session, conn: Connection):
-        self._secretsmgr = session.client(service_name="secretsmanager")
+    def __init__(self, config: Config, conn: Connection):
+        self._secretsmgr = config.boto_session.client(service_name="secretsmanager")
         self._conn = conn
 
     def create_user(self, event: UserEvent) -> str:
@@ -54,10 +54,16 @@ class UserManager:
         create an IAM policy that allows users to access their own secrets by tag.
         """
         logger.debug("Creating secret: %s", event.secret_name)
+        secret_string = {
+            "host": self._conn.host,
+            "port": self._conn.port,
+            "username": event.db_user,
+            "password": password,
+        }
         response = self._secretsmgr.create_secret(
             Name=event.secret_name,
             Description=f"Sym-generated temporary password for user: {event.username}",
-            SecretString=json.dumps({"username": event.db_user, "password": password}),
+            SecretString=json.dumps(secret_string),
             Tags=[
                 {"Key": "sym.user", "Value": event.username},
             ],

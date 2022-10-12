@@ -86,7 +86,7 @@ try:
         password=config.db_pass,
         connect_timeout=5,
     )
-    user_manager = UserManager(config.boto_session, conn)
+    user_manager = UserManager(config, conn)
 except pymysql.MySQLError as e:
     print("ERROR: Unexpected error: Could not connect to DB")
     print(e)

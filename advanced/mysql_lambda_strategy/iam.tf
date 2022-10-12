@@ -18,11 +18,13 @@ data "aws_iam_policy_document" "sym_secrets" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:GetSecretValue"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:secretsmanager:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:secret:/symops.com/*"
+    ]
     condition {
       test     = "StringLike"
       variable = "aws:userid"
-      values   = ["*:$${secretsmananager:ResourceTag/sym.user}"]
+      values   = ["*:$${secretsmanager:ResourceTag/sym.user}"]
     }
   }
 }

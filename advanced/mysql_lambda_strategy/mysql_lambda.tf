@@ -1,7 +1,4 @@
 ############ Sym's MySQL Lambda Integration ##############
-
-data "aws_caller_identity" "current" {}
-
 locals {
   account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-mysql"
