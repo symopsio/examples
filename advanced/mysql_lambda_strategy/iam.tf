@@ -27,4 +27,11 @@ data "aws_iam_policy_document" "sym_secrets" {
       values   = ["*:$${secretsmanager:ResourceTag/sym.user}"]
     }
   }
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:ListSecrets"
+    ]
+    resources = ["*"]
+  }
 }
