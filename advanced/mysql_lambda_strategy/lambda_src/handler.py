@@ -5,6 +5,7 @@ import botocore
 import pymysql
 from config import Config, get_config
 from devtools import debug
+from sym.sdk.resource import SRN
 from user_manager import UserEvent, UserManager
 
 logger = logging.getLogger(__name__)
@@ -45,7 +46,7 @@ def resolve_event(config: Config, event: dict) -> UserEvent:
     https://docs.symops.com/docs/reporting
     """
     srn = event["run"]["srn"]
-    run_id = srn.split(":")[-1]
+    run_id = SRN.parse(srn).identifier
     username = event["run"]["actors"]["request"]["username"]
     subject = username.split("@")[0]
     return UserEvent(
