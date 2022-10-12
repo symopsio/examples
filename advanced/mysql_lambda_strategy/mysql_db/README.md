@@ -18,7 +18,7 @@ tomap({
 
 ## SSH Tunneling
 
-We've included a bastion EC2 instance that you can use to connect to the database over an SSH tunnel using [AWS Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html). Here's an example that forwards database traffic to local port 5433, using the outputs from `terraform output dbconfig`:
+We've included a bastion EC2 instance that you can use to connect to the database over an SSH tunnel using [AWS Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html). Here's an example that forwards database traffic to local port 5433, using the outputs from `terraform output db_config`:
 
 ```bash
 $ ./tunnel.sh --endpoint symdb.abcdefg12345.us-east-1.rds.amazonaws.com \
@@ -26,4 +26,4 @@ $ ./tunnel.sh --endpoint symdb.abcdefg12345.us-east-1.rds.amazonaws.com \
   --local-port 3308
 ```
 
-Once you have the tunnel open, you can connect to the database on `localhost`, using using the username and password from `terraform output dbconfig`.
+Once you have the tunnel open, you can connect to the database on `localhost`, using using the username and password from `terraform output db_config`.
