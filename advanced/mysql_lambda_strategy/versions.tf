@@ -6,5 +6,9 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 4.0"
     }
+    sym = {
+      source  = "symopsio/sym"
+      version = ">= 1.13.2, < 2.0.0"
+    }
   }
 }
