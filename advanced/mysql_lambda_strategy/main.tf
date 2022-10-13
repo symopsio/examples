@@ -83,7 +83,7 @@ resource "sym_target" "readonly" {
 # The Strategy your Flow uses to manage access
 resource "sym_strategy" "lambda" {
   type = "aws_lambda"
-  name = "main-lambda-strategy"
+  name = "lambda-strategy-main"
 
   # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
@@ -139,7 +139,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "slack-main"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"

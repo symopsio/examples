@@ -66,7 +66,8 @@ def format_db_user(username: str, run_id: str) -> str:
     Create a max 32 character database username based on the requesting username
     and a hash of the current run id
     """
-    # Get a 24 character hash of the run id
+    # Get a 24 character hash of the run id (confusingly, hexdigest will produce double the
+    # length that you supply as a parameter)
     run_id_truncated = hashlib.shake_128(run_id.encode()).hexdigest(12)
 
     # Get the subject from the username if it is an email address
@@ -90,10 +91,10 @@ try:
     )
     user_manager = UserManager(config, conn)
 except pymysql.MySQLError as e:
-    print("ERROR: Unexpected error: Could not connect to DB")
-    print(e)
+    logger.error("ERROR: Unexpected error: Could not connect to DB")
+    logger.error(e)
     sys.exit()
 except botocore.exceptions.ClientError as err:
-    print("ERROR: Unexpected error: Could not connect initialize boto session")
-    print(e)
+    logger.error("ERROR: Unexpected error: Could not connect initialize boto session")
+    logger.error(e)
     sys.exit()
