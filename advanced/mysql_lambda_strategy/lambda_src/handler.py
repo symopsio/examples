@@ -17,6 +17,8 @@ logger.setLevel(logging.DEBUG)
 def handle(event: dict, context) -> dict:
     """
     Creates or drops a MySQL user for the given request.
+    Return the generated secret name in the response payload so
+    that Sym can message it to the requesting user.
     """
     logger.debug("Got event: %s", event)
 

@@ -30,6 +30,7 @@ class UserManager:
     def __init__(self, config: Config, conn: Connection):
         self._secretsmgr = config.boto_session.client(service_name="secretsmanager")
         self._conn = conn
+        self._targets = config.targets
 
     def create_user(self, event: UserEvent) -> str:
         """Creates a secrets manager secret and a database user for the given event"""
@@ -91,22 +92,13 @@ class UserManager:
         logger.debug(stmt, event.db_user, "<redacted>")
         with self._conn.cursor() as cur:
             cur.execute(stmt, [event.db_user, password])
-            target_stmt = self._load_target_stmt(event)
+            target_stmt = self._targets.get(event.target)
             if target_stmt:
                 target_args = {"username": event.db_user}
                 logger.debug(target_stmt, target_args)
                 cur.execute(target_stmt, target_args)
-
-    def _load_target_stmt(self, event: UserEvent) -> Optional[str]:
-        """Load sql that corresponds to the target the user requested"""
-        sql_path = os.environ["LAMBDA_TASK_ROOT"] + f"/targets/{event.target}.sql"
-        if not os.path.exists(sql_path):
-            logger.debug("No target sql found for target: %s", event.target)
-            return None
-
-        with open(sql_path) as f:
-            result = f.read()
-        return result
+            else:
+                logger.debug("No target sql found for target: %s", event.target)
 
     def _drop_db_user(self, event: UserEvent) -> None:
         stmt = "DROP USER IF EXISTS %s"
