@@ -66,8 +66,8 @@ try:
         password=config.pg_pass,
     )
 except Exception as e:
-    print("ERROR: Unexpected error: Could not connect to DB")
-    print(e)
+    logger.error("ERROR: Unexpected error: Could not connect to DB")
+    logger.error(e)
     sys.exit()
 
 

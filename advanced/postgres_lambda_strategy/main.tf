@@ -6,6 +6,17 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_caller_identity" "current" {}
+
+# Optionally set up a database to use for testing the integration
+module "db" {
+  source = "./postgres_db"
+  count  = var.db_enabled ? 1 : 0
+
+  tags = var.tags
+}
+
+
 ############ Give Sym Runtime Permissions to execute your AWS Lambda ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
@@ -73,7 +84,7 @@ resource "sym_target" "postgres_roles" {
 # The Strategy your Flow uses to manage access
 resource "sym_strategy" "lambda" {
   type = "aws_lambda"
-  name = "main-lambda-strategy"
+  name = "lambda-strategy-main"
 
   # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
@@ -129,7 +140,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "slack-main"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
