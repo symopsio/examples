@@ -1,7 +1,4 @@
 ############ Sym's Postgres Lambda Integration ##############
-
-data "aws_caller_identity" "current" {}
-
 locals {
   account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-postgres"
@@ -12,18 +9,10 @@ locals {
   db_config          = var.db_enabled ? module.db[0].db_config : var.db_config
 }
 
-# Optionally set up a database to use for testing the integration
-module "db" {
-  source = "./postgres_db"
-  count  = var.db_enabled ? 1 : 0
-
-  tags = var.tags
-}
-
 # Set up the Sym Postgres Lambda Function
 module "postgres_lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.36.0"
+  version = "~> 4.0.2"
 
   function_name = local.function_name
   description   = "Sym Postgres Integration"
@@ -46,18 +35,7 @@ module "postgres_lambda_function" {
   ]
 
   attach_policy_json = true
-  policy_json = jsonencode({
-    Statement = [{
-      Action = [
-        "ssm:GetParameter*"
-      ],
-      Effect = "Allow"
-      Resource = [
-        "arn:aws:ssm:*:${local.account_id}:parameter/symops.com/${local.function_name}/*"
-      ]
-    }]
-    Version = "2012-10-17"
-  })
+  policy_json        = data.aws_iam_policy_document.lambda_policy.json
 
   timeout = 10
 
@@ -75,11 +53,22 @@ module "postgres_lambda_function" {
   tags = var.tags
 }
 
+# Give the lambda permissions to read the database password.
+data "aws_iam_policy_document" "lambda_policy" {
+  statement {
+    effect  = "Allow"
+    actions = ["ssm:GetParameter*"]
+    resources = [
+      "arn:aws:ssm:*:${local.account_id}:parameter/symops.com/${local.function_name}/*"
+    ]
+  }
+}
+
 # We must use a layer in order to install the correct native pscopg2 library
 # for the lambda runtime
 module "postgres_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 2.36.0"
+  version = "~> 4.0.2"
 
   create_layer = true
 
