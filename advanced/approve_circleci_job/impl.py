@@ -1,7 +1,4 @@
 import requests
-
-# import time
-
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
 from sym.sdk.templates import ApprovalTemplate

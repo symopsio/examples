@@ -92,7 +92,6 @@ resource "sym_flow" "this" {
   template = "sym:template:approval:1.0.0"
 
   implementation = "${path.module}/impl.py"
-  #implementation = "${path.module}/impl_with_context.py"
 
   environment_id = sym_environment.this.id
 
