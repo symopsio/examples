@@ -11,8 +11,8 @@ with a different `terraform.tfvars`, which will then create a different set of r
 
 This is helpful if you wish to test your configuration with resources in a test environment before configuring Sym with Production data.
 
-Furthermore, `impl.py` has been modified with an `on_approve` and `on_deny` hook that only allows a subset of users defined in `terraform.tfvars > flow_variables["appprovers"]`
-to be able to approve and deny requests. 
+In addition, `impl.py` has been modified with an `on_approve` and `on_deny` hook that allows only a subset of users defined in `terraform.tfvars > flow_variables["appprovers"]`
+to approve and deny requests. 
 
 ## About Sym
 
