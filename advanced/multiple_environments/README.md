@@ -6,7 +6,7 @@ This setup is useful if you want to have separate deployments for testing and pr
 
 ## Tutorial
 
-Check out a step-by-step tutorial TODO: [here](https://docs.symops.com/docs/custom-integrations)
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/multiple-environments).
 
 ## About Sym
 
