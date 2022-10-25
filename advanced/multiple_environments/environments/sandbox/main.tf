@@ -7,7 +7,7 @@ provider "sym" {
 module "sandbox_approval_flow" {
     source = "../../modules/sym"
 
-    # Resources will contain "main" in their name to differentiate environments.
+    # Resources will contain "sandbox" in their name to differentiate environments.
     environment_name = "sandbox"
     error_channel_name = "#sym-sandbox-errors"
     slack_workspace_id = "T123ABC"
