@@ -12,7 +12,6 @@ This document describes a set of steps for how to create a structurally consiste
   - `README.md` should have:
 	  - A title with a descriptor of the example, e.g. `Okta Access Strategy`.
 	  - 1-2 sentence description of what the Flow does.
-	  - A link to a Diff that compares wth the basic Approval Flow (instructions below).
 	  - A short screen recording, if possible.
 	  - See the [`okta_access_strategy/README.md`](https://github.com/symopsio/examples/blob/main/okta_access_strategy/README.md) for an example.
   - `impl.py`
@@ -24,26 +23,14 @@ This document describes a set of steps for how to create a structurally consiste
 	  - The minimally required providers for the example.
 
 ## Constructing an Example
-### Implementing & Creating the Diff Link
-In order to create a linked Diff for the README, you will need a commit containing just the basic approval, and the commit after you have implemented your example.
-You can do this with:
-1. `git cherry-pick 70467906911c0f1a0754aaf979a1151d8a6b291e`
-	- (This commit is from the [approval-base](https://github.com/symopsio/examples/tree/approval-base) branch)
-2. Rename the `approval-base` folder to your example folder name (e.g. `okta_access_strategy`)
-3. Update the README title and description
-4. `git commit --amend --all`
-5. Implement your example
-6. Run `terraform fmt`
-7. Commit your example
-8. Create a Diff link with  `https://github.com/symopsio/examples/compare/[first_commit_hash]...[commit_hash_after_implementing]`
-	- For example: https://github.com/symopsio/quickstarts/compare/9f6aedea...2232a9f
-	- (Note: You can use short hashes or long hashes, they both work)
+### Implementing
+- Implement your example in a new folder
+- Add a README.md. You can use the `approvals` README.md as a template
+- Add a screen recording to your example's README.md
+- Run `terraform fmt`
+- Commit your example
 
-### Update the example README.md
-1. Update your example's README.md with the Diff link after you have finished implementing.
-2. Update your example's README.md with a screen recording.
-
-### Update the Top-level README.md
+### Update the top-level README.md
 - Add a row to the Content table in the root directory's [README.md](https://github.com/symopsio/examples/blob/main/README.md).
 - Make sure the table is in alphabetical order (i.e. the same order as the folders).
 
