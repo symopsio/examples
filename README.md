@@ -38,4 +38,5 @@ Advanced examples go beyond explaining the basics of Sym resources. Here you'll 
 | [Custom Integration](advanced/custom_integration)                       | A Sym Flow that uses a Custom Integration to wire in services that aren't directly supported by the SDK                |
 | [Multiple Environments](advanced/multiple_environments)                 | Use Sym Environments and Terraform modules to easily deploy a separate test Sym Flow                                   |
 | [MySQL Access Strategy](advanced/mysql_lambda_strategy)                 | A Sym Flow that invokes an AWS Lambda to manage access to an AWS-hosted MySQL instance                                 |
-| [Postgres Access Strategy](advanced/postgres_lambda_strategy)           | A Sym Flow that invokes an AWS Lambda to manage access to an AWS-hosted Postgres instance                              |
+| [Postgres Access Strategy](advanced/postgres_lambda_strategy)           | A Sym Flow that invokes an AWS Lambda to manage access to an AWS-hosted PostgreSQL instance                            |
+| [Postgres Access Strategy](advanced/postgres_temp_user_strategy)        | A Sym Flow that invokes an AWS Lambda to create temporary users to access an AWS-hosted PostgreSQL instance            |

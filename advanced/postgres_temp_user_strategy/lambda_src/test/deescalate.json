@@ -1,0 +1,88 @@
+{
+  "id": "2a453aff-c17c-470c-986b-e81249e2de0c",
+  "meta": {
+    "schema_version": 6
+  },
+  "state": {
+    "status": "processing",
+    "errors": []
+  },
+  "run": {
+    "srn": "healthy-health:run:postgres:2.0.0:2b1befa5-caf5-4ac3-8509-64732c15cb7d",
+    "parent": "healthy-health:run:flow_selection:1.0.0:267a346a-81ab-4e4b-abca-61f135620a40",
+    "flow": "healthy-health:flow:postgres:2.0.0",
+    "actors": {
+      "prompt": {
+        "user": "healthy-health:user:normal:dead6d58-82f2-46bd-bc70-0590479fa7fc:latest",
+        "name": "",
+        "username": "sym-user@healthy-health.co",
+        "identity": {
+          "service": "sym",
+          "external_id": "cloud",
+          "email": "sym-user@healthy-health.co"
+        }
+      },
+      "request": {
+        "user": "healthy-health:user:normal:dead6d58-82f2-46bd-bc70-0590479fa7fc:latest",
+        "name": "",
+        "username": "sym-user@healthy-health.co",
+        "identity": {
+          "service": "sym",
+          "external_id": "cloud",
+          "email": "sym-user@healthy-health.co"
+        }
+      },
+      "approve": {
+        "user": "healthy-health:user:normal:479e17fc-2b72-414d-9c41-ccf199a49b62:latest",
+        "name": "",
+        "username": "sym-implementer@healthy-health.co",
+        "identity": {
+          "service": "sym",
+          "external_id": "cloud",
+          "email": "sym-implementer@healthy-health.co"
+        }
+      },
+      "deescalate": {
+        "user": "healthy-health:user:normal:479e17fc-2b72-414d-9c41-ccf199a49b62:latest",
+        "name": "",
+        "username": "sym-implementer@healthy-health.co",
+        "identity": {
+          "service": "sym",
+          "external_id": "cloud",
+          "email": "sym-implementer@healthy-health.co"
+        }
+      }
+    }
+  },
+  "event": {
+    "srn": "sym:event-spec:approval:1.0.0:deescalate",
+    "type": "deescalate",
+    "template": "sym:template:approval:1.0.0",
+    "timestamp": "2022-05-10T14:48:02.188617",
+    "channel": "internal"
+  },
+  "actor": {
+    "user": "healthy-health:user:normal:479e17fc-2b72-414d-9c41-ccf199a49b62:latest",
+    "name": "",
+    "username": "sym-implementer@healthy-health.co",
+    "identity": {
+      "service": "sym",
+      "external_id": "cloud",
+      "email": "sym-implementer@healthy-health.co"
+    }
+  },
+  "fields": {
+    "target_id": "92e28a63-aedb-4b90-93ad-e4ecba49c9b1",
+    "target": {
+      "name": "readonly",
+      "srn": "healthy-health:access_target:aws_lambda_function:postgres:latest:92e28a63-aedb-4b90-93ad-e4ecba49c9b1",
+      "type": "aws_lambda_function",
+      "label": "Postgres",
+      "settings": {
+        "arn": "arn:aws:lambda:us-east-1:0123456789012:function:sym-postgres-prod"
+      }
+    },
+    "deescalate_type": "scheduled"
+  },
+  "type": "event"
+}

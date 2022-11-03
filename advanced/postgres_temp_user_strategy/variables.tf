@@ -1,5 +1,5 @@
 variable "db_config" {
-  description = "Connection configuration for your Postgres Database, required if db_enabled is false"
+  description = "Connection configuration for your PostgreSQL Database, required if db_enabled is false"
   type        = object({ host = string, port = number, user = string, pass = string })
   default     = null
   sensitive   = true

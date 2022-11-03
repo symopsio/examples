@@ -2,7 +2,7 @@
 locals {
   account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-postgres"
-  db_password_key = "/symops.com/${local.function_name}/PG_PASSWORD"
+  db_password_key = "/symops.com/${local.function_name}/DB_PASSWORD"
 
   security_group_ids = var.db_enabled ? [module.db[0].security_group_id] : var.security_group_ids
   subnet_ids         = var.db_enabled ? module.db[0].private_subnet_ids : var.subnet_ids
@@ -26,7 +26,7 @@ module "postgres_lambda_function" {
     pip_requirements = false,
     patterns = [
       "!__pycache__/.*",
-      "!test/.*"
+      "!test/.*",
     ]
   }]
 
@@ -40,10 +40,10 @@ module "postgres_lambda_function" {
   timeout = 10
 
   environment_variables = {
-    "PG_HOST"         = local.db_config["host"]
-    "PG_PASSWORD_KEY" = local.db_password_key
-    "PG_PORT"         = local.db_config["port"]
-    "PG_USER"         = local.db_config["user"]
+    "DB_HOST"         = local.db_config["host"]
+    "DB_PASSWORD_KEY" = local.db_password_key
+    "DB_PORT"         = local.db_config["port"]
+    "DB_USER"         = local.db_config["user"]
   }
 
   vpc_subnet_ids         = local.subnet_ids
@@ -53,7 +53,9 @@ module "postgres_lambda_function" {
   tags = var.tags
 }
 
-# Give the lambda permissions to read the database password.
+# Give the lambda permissions to read the database password
+# as well as to create and delete secrets manager secrets, since
+# this is where we will store the temporary user credentials.
 data "aws_iam_policy_document" "lambda_policy" {
   statement {
     effect  = "Allow"
@@ -62,13 +64,35 @@ data "aws_iam_policy_document" "lambda_policy" {
       "arn:aws:ssm:*:${local.account_id}:parameter/symops.com/${local.function_name}/*"
     ]
   }
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:CreateSecret"
+    ]
+    resources = ["*"]
+    condition {
+      test     = "StringLike"
+      variable = "secretsmanager:Name"
+      values   = ["/symops.com/${local.function_name}/*"]
+    }
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "secretsmanager:DeleteSecret",
+      "secretsmanager:TagResource"
+    ]
+    resources = [
+      "arn:aws:secretsmanager:*:${local.account_id}:secret:/symops.com/${local.function_name}/*"
+    ]
+  }
 }
 
 # We must use a layer in order to install the correct native pscopg2 library
 # for the lambda runtime
 module "postgres_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   create_layer = true
 
@@ -79,7 +103,7 @@ module "postgres_lambda_layer" {
   source_path = [{
     path             = "${path.module}/lambda_src/requirements.txt",
     pip_requirements = true,
-    prefix_in_zip    = "python",
+    prefix_in_zip    = "python"
   }]
 
   build_in_docker = true

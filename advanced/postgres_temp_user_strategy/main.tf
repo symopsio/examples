@@ -6,6 +6,8 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_region" "current" {}
+
 data "aws_caller_identity" "current" {}
 
 # Optionally set up a database to use for testing the integration
@@ -93,29 +95,31 @@ resource "sym_flow" "this" {
   name  = "postgres"
   label = "PostgreSQL Access"
 
+  template       = "sym:template:approval:1.0.0"
   implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id
 
-  params {
+  params = {
     # By specifying a strategy, this Flow will now be able to manage access (escalate/de-escalate)
     # to the targets specified in the `sym_strategy` resource.
     strategy_id = sym_strategy.lambda.id
 
-    # Each prompt_field defines a custom form field for the Slack modal that
+    # prompt_fields_json defines custom form fields for the Slack modal that
     # requesters fill out to make their requests.
-    prompt_field {
-      name     = "reason"
-      label    = "Why do you need access?"
-      type     = "string"
-      required = true
-    }
-
-    prompt_field {
-      name           = "duration"
-      type           = "duration"
-      allowed_values = ["30m", "1h"]
-      required       = true
-    }
+    prompt_fields_json = jsonencode([
+      {
+        name     = "reason"
+        label    = "Why do you need access?"
+        type     = "string"
+        required = true
+      },
+      {
+        name           = "duration"
+        type           = "duration"
+        allowed_values = ["30m", "1h"]
+        required       = true
+      }
+    ])
   }
 }
 

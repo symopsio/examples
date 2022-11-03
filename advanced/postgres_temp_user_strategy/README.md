@@ -14,16 +14,9 @@ You can enable the module by setting the `db_enabled` variable to true.
 
 Refer to the [`README`](postgres_db/README.md) for instructions on tunneling to the example database.
 
-## Local testing
+## Testing
 
-You can iterate on your handler function locally by setting up a docker compose based PostgreSQL database and then invoking your handler function directly.
-
-1. Start the local database with [`docker compose up`](lambda_src/test/docker-compose.yaml).
-2. Copy [`env.example`](lambda_src/test/env.example) to `.env` and then `source` it into your shell
-3. Create a test user, database and role with [`init-users.sh`](lambda_src/test/init-users.sh).
-4. Run `pip install -r requirements.txt`
-5. Run `cat test/escalate.json | python handler.py` to grant a user access to the readonly role.
-6. Verify the user grants by running `\du` from the `psql` console.
+You can use the provided [test events](lambda_src/test) to [test your function](https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html) in the Lambda console.
 
 ## About Sym
 
