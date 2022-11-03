@@ -7,8 +7,6 @@ This example illustrates how to implement a Sym Flow that uses a Aptible Access 
 
 Check out a step-by-step tutorial [here](https://docs.symops.com/docs/aptible).
 
-A diff between this example and the basic [Approval](../approvals) example: [Diff](https://github.com/symopsio/examples/compare/2d87caf...38e5c2d)
-
 
 ## About Sym
 

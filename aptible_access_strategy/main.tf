@@ -139,31 +139,29 @@ resource "sym_flow" "this" {
   name  = "aptible"
   label = "Aptible Access"
 
-  template       = "sym:template:approval:1.0.0"
   implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id
 
-  params = {
+  params {
     # By specifying a strategy, this Flow will now be able to manage access (escalate/de-escalate)
     # to the targets specified in the `sym_strategy` resource.
     strategy_id = sym_strategy.aptible.id
 
-    # prompt_fields_json defines custom form fields for the Slack modal that
+    # Each prompt_field defines a custom form field for the Slack modal that
     # requesters fill out to make their requests.
-    prompt_fields_json = jsonencode([
-      {
-        name     = "reason"
-        label    = "Why do you need access?"
-        type     = "string"
-        required = true
-      },
-      {
-        name           = "duration"
-        type           = "duration"
-        allowed_values = ["1h", "1d", "10d"]
-        required       = true
-      }
-    ])
+    prompt_field {
+      name     = "reason"
+      label    = "Why do you need access?"
+      type     = "string"
+      required = true
+    }
+
+    prompt_field {
+      name           = "duration"
+      type           = "duration"
+      allowed_values = ["1h", "1d", "10d"]
+      required       = true
+    }
   }
 }
 
