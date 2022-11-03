@@ -66,7 +66,6 @@ resource "sym_flow" "this" {
   name  = "aws-lambda-from-sdk"
   label = "AWS Lambda SDK Example"
 
-  template       = "sym:template:approval:1.0.0"
   implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id
 
@@ -75,23 +74,22 @@ resource "sym_flow" "this" {
     lambda_arn = module.lambda_function.lambda_function_arn
   }
 
-  params = {
-    # prompt_fields_json defines custom form fields for the Slack modal that
+  params {
+    # Each prompt_field defines a custom form field for the Slack modal that
     # requesters fill out to make their requests.
-    prompt_fields_json = jsonencode([
-      {
+    prompt_field {
         name     = "resource"
         label    = "What do you need access to?"
         type     = "string"
         required = true
-      },
-      {
-        name     = "reason"
-        label    = "Why do you need access?"
-        type     = "string"
-        required = true
-      }
-    ])
+    }
+
+    prompt_field {
+      name     = "reason"
+      label    = "Why do you need access?"
+      type     = "string"
+      required = true
+    }
   }
 }
 

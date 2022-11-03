@@ -89,38 +89,35 @@ resource "sym_flow" "this" {
   name  = "ci-approval"
   label = "CI Approval"
 
-  template = "sym:template:approval:1.0.0"
-
   implementation = "${path.module}/impl.py"
-
   environment_id = sym_environment.this.id
 
-  params = {
-    # allowed_sources_json defines the sources from which this flow can be
-    # invoked from. Valid values: "api", "slack".
-    allowed_sources_json = jsonencode(["api"])
+  params {
+    # allowed_sources defines the sources from which this flow can be invoked.
+    # Valid values: "api", "slack"
+    allowed_sources = ["api"]
 
-    # prompt_fields_json defines the `flow_inputs` to be passed in the API request body
-    prompt_fields_json = jsonencode([
-      {
-        name     = "workflow_url"
-        label    = "CI Workflow URL"
-        type     = "string"
-        required = true
-      },
-      {
-        name     = "merging_user"
-        label    = "User who merged PR"
-        type     = "string"
-        required = true
-      },
-      {
-        name     = "workflow_id"
-        label    = "CircleCI workflow"
-        type     = "string"
-        required = true
-      }
-    ])
+    # Each prompt_field defines a key for `flow_inputs` to be passed in the API request body
+    prompt_field {
+      name     = "workflow_url"
+      label    = "CI Workflow URL"
+      type     = "string"
+      required = true
+    }
+
+    prompt_field {
+      name     = "merging_user"
+      label    = "User who merged PR"
+      type     = "string"
+      required = true
+    }
+
+    prompt_field {
+      name     = "workflow_id"
+      label    = "CircleCI workflow"
+      type     = "string"
+      required = true
+    }
   }
 }
 
