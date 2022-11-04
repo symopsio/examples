@@ -12,7 +12,7 @@ locals {
 # Set up the Sym MySQL Lambda Function
 module "mysql_lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   function_name = local.function_name
   description   = "Sym MySQL Integration"
@@ -95,21 +95,14 @@ module "mysql_lambda_layer" {
 
   create_layer = true
 
-  layer_name          = "sym-mysql-layer"
+  layer_name          = "${local.function_name}-layer"
   description         = "Sym MySQL Dependencies"
   compatible_runtimes = ["python3.8"]
 
   source_path = [{
-    path             = "${path.module}/lambda_src",
+    path             = "${path.module}/lambda_src/requirements.txt",
     pip_requirements = true,
-    prefix_in_zip    = "python",
-    patterns = [
-      "!python/__pycache__/.*",
-      "!python/targets/.*",
-      "!python/test/.*",
-      # Exclude files in the top-level directory
-      "!python/[^/]+"
-    ]
+    prefix_in_zip    = "python"
   }]
 
   build_in_docker = true
