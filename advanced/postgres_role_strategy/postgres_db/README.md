@@ -1,6 +1,6 @@
 # postgres-db
 
-This is a helper module that will set up a VPC and RDS instance that you can use for testing out the Sym Postgres integration.
+This is a helper module that will set up a VPC and RDS instance that you can use for testing out the Sym PostgreSQL integration.
 
 ## Reading the Database Configuration
 

@@ -14,7 +14,7 @@ logger.setLevel(logging.DEBUG)
 
 def handle(event: dict, context) -> dict:
     """
-    Grants or revokes a Postgres role for the requesting Sym user.
+    Grants or revokes a PostgreSQL role for the requesting Sym user.
 
     For more details on the event object format, refer to our reporting docs:
     https://docs.symops.com/docs/reporting

@@ -1,7 +1,7 @@
-############ Sym's MySQL Lambda Integration ##############
+############ Sym's PostgreSQL Lambda Integration ##############
 locals {
   account_id      = data.aws_caller_identity.current.account_id
-  function_name   = "sym-mysql"
+  function_name   = "sym-postgres"
   db_password_key = "/symops.com/${local.function_name}/DB_PASSWORD"
 
   security_group_ids = var.db_enabled ? [module.db[0].security_group_id] : var.security_group_ids
@@ -9,13 +9,13 @@ locals {
   db_config          = var.db_enabled ? module.db[0].db_config : var.db_config
 }
 
-# Set up the Sym MySQL Lambda Function
-module "mysql_lambda_function" {
+# Set up the Sym PostgreSQL Lambda Function
+module "postgres_lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   function_name = local.function_name
-  description   = "Sym MySQL Integration"
+  description   = "Sym PostgreSQL Integration"
   handler       = "handler.handle"
   runtime       = "python3.8"
 
@@ -26,12 +26,12 @@ module "mysql_lambda_function" {
     pip_requirements = false,
     patterns = [
       "!__pycache__/.*",
-      "!test/.*"
+      "!test/.*",
     ]
   }]
 
   layers = [
-    module.mysql_lambda_layer.lambda_layer_arn,
+    module.postgres_lambda_layer.lambda_layer_arn,
   ]
 
   attach_policy_json = true
@@ -88,28 +88,22 @@ data "aws_iam_policy_document" "lambda_policy" {
   }
 }
 
-# Use a layer to store module dependencies
-module "mysql_lambda_layer" {
+# We must use a layer in order to install the correct native pscopg2 library
+# for the lambda runtime
+module "postgres_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   create_layer = true
 
-  layer_name          = "sym-mysql-layer"
-  description         = "Sym MySQL Dependencies"
+  layer_name          = "${local.function_name}-layer"
+  description         = "Sym PostgreSQL Dependencies"
   compatible_runtimes = ["python3.8"]
 
   source_path = [{
-    path             = "${path.module}/lambda_src",
+    path             = "${path.module}/lambda_src/requirements.txt",
     pip_requirements = true,
-    prefix_in_zip    = "python",
-    patterns = [
-      "!python/__pycache__/.*",
-      "!python/targets/.*",
-      "!python/test/.*",
-      # Exclude files in the top-level directory
-      "!python/[^/]+"
-    ]
+    prefix_in_zip    = "python"
   }]
 
   build_in_docker = true
@@ -118,7 +112,7 @@ module "mysql_lambda_layer" {
   tags = var.tags
 }
 
-# SSM parameter to store the MySQL password in.
+# SSM parameter to store the PostgreSQL password in.
 #
 # Ensure your Terraform state is encrypted if you supplied a production
 # password in your db_config.
@@ -126,7 +120,7 @@ module "mysql_lambda_layer" {
 # You can also configure a temporary password and uncomment the block
 # below to ignore lifecycle changes. Then you can manage the password outside of
 # the Terraform provisioning lifecycle, and outside of Terraform state.
-resource "aws_ssm_parameter" "mysql_password" {
+resource "aws_ssm_parameter" "postgres_password" {
   name  = local.db_password_key
   type  = "SecureString"
   value = local.db_config["pass"]

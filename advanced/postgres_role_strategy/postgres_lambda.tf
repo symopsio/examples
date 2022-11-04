@@ -1,4 +1,4 @@
-############ Sym's Postgres Lambda Integration ##############
+############ Sym's PostgreSQL Lambda Integration ##############
 locals {
   account_id      = data.aws_caller_identity.current.account_id
   function_name   = "sym-postgres"
@@ -9,13 +9,13 @@ locals {
   db_config          = var.db_enabled ? module.db[0].db_config : var.db_config
 }
 
-# Set up the Sym Postgres Lambda Function
+# Set up the Sym PostgreSQL Lambda Function
 module "postgres_lambda_function" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   function_name = local.function_name
-  description   = "Sym Postgres Integration"
+  description   = "Sym PostgreSQL Integration"
   handler       = "handler.handle"
   runtime       = "python3.8"
 
@@ -72,20 +72,14 @@ module "postgres_lambda_layer" {
 
   create_layer = true
 
-  layer_name          = "sym-postgres-layer"
-  description         = "Sym Postgres Dependencies"
+  layer_name          = "${local.function_name}-layer"
+  description         = "Sym PostgreSQL Dependencies"
   compatible_runtimes = ["python3.8"]
 
   source_path = [{
-    path             = "${path.module}/lambda_src",
+    path             = "${path.module}/lambda_src/requirements.txt",
     pip_requirements = true,
     prefix_in_zip    = "python",
-    patterns = [
-      "!python/__pycache__/.*",
-      "!python/test/.*",
-      # Exclude files in the top-level directory
-      "!python/[^/]+"
-    ]
   }]
 
   build_in_docker = true
@@ -94,7 +88,7 @@ module "postgres_lambda_layer" {
   tags = var.tags
 }
 
-# SSM parameter to store the Postgres password in.
+# SSM parameter to store the PostgreSQL password in.
 #
 # Ensure your Terraform state is encrypted if you supplied a production
 # password in your db_config.

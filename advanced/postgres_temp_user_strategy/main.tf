@@ -6,6 +6,8 @@ provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_region" "current" {}
+
 data "aws_caller_identity" "current" {}
 
 # Optionally set up a database to use for testing the integration
@@ -15,7 +17,6 @@ module "db" {
 
   tags = var.tags
 }
-
 
 ############ Give Sym Runtime Permissions to execute your AWS Lambda ##############
 
@@ -67,12 +68,10 @@ resource "sym_integration" "lambda_context" {
 
 # A target AWS Lambda that will be invoked on escalate and de-escalate.
 # The `name` will be used in the lambda to decide which resource to manage access to
-resource "sym_target" "postgres_roles" {
-  for_each = { for target in var.postgres_roles : target["name"] => target["label"] }
-
+resource "sym_target" "readonly" {
   type  = "aws_lambda_function"
-  name  = each.key
-  label = each.value
+  name  = "readonly"
+  label = "Read Only"
 
   settings = {
     # `type=aws_lambda_function` sym_targets have a required setting `arn`
@@ -88,13 +87,13 @@ resource "sym_strategy" "lambda" {
 
   # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
-  targets        = [for target in sym_target.postgres_roles : target.id]
+  targets        = [sym_target.readonly.id]
 }
 
 # A Sym Flow that executes an AWS Lambda on escalate and de-escalate
 resource "sym_flow" "this" {
   name  = "postgres"
-  label = "Postgres Access"
+  label = "PostgreSQL Access"
 
   implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id

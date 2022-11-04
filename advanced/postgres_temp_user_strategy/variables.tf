@@ -1,5 +1,5 @@
 variable "db_config" {
-  description = "Connection configuration for your Postgres Database, required if db_enabled is false"
+  description = "Connection configuration for your PostgreSQL Database, required if db_enabled is false"
   type        = object({ host = string, port = number, user = string, pass = string })
   default     = null
   sensitive   = true
@@ -9,11 +9,6 @@ variable "db_enabled" {
   description = "Whether or not to create a database to use with the integration"
   type        = bool
   default     = false
-}
-
-variable "postgres_roles" {
-  description = "List of roles to provide access to"
-  type        = list(object({ name = string, label = string }))
 }
 
 variable "security_group_ids" {

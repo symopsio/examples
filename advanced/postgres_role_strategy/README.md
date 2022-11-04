@@ -1,6 +1,6 @@
-# Postgres Lambda Strategy
+# PostgreSQL Role Strategy
 
-A starter template that implements a Postgres Sym Flow using an AWS Lambda to manage database user permissions.
+Manage access to an RDS PostgreSQL instance by temporarily assigning roles to existing database users.
 
 ## Tutorial
 
@@ -8,7 +8,7 @@ Our step-by-step [PostgreSQL on AWS tutorial](https://docs.symops.com/docs/postg
 
 ## Setting up an example database
 
-Enable the [`postgres_db`](postgres_db) module to provision an RDS Postgres database in a VPC that you can use to test the integration.
+Enable the [`postgres_db`](postgres_db) module to provision an RDS PostgreSQL database in a VPC that you can use to test the integration.
 
 You can enable the module by setting the `db_enabled` variable to true.
 
@@ -16,7 +16,7 @@ Refer to the [`README`](postgres_db/README.md) for instructions on tunneling to 
 
 ## Local testing
 
-You can iterate on your handler function locally by setting up a docker compose based Postgres database and then invoking your handler function directly.
+You can iterate on your handler function locally by setting up a docker compose based PostgreSQL database and then invoking your handler function directly.
 
 1. Start the local database with [`docker compose up`](lambda_src/test/docker-compose.yaml).
 2. Copy [`env.example`](lambda_src/test/env.example) to `.env` and then `source` it into your shell
