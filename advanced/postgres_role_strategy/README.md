@@ -1,6 +1,6 @@
-# PostgreSQL Lambda Strategy
+# PostgreSQL Role Strategy
 
-A starter template that implements a PostgreSQL Sym Flow using an AWS Lambda to manage database user permissions.
+Manage access to an RDS PostgreSQL instance by temporarily assigning roles to existing database users.
 
 ## Tutorial
 

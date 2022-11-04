@@ -1,6 +1,6 @@
-# PostgreSQL Lambda Strategy
+# PostgreSQL Temp User Strategy
 
-A starter template that implements a PostgreSQL Sym Flow using an AWS Lambda to manage database user permissions.
+Manage access to an RDS PostgreSQL instance by creating temporary database users that are stored in AWS Secrets Manager.
 
 ## Tutorial
 

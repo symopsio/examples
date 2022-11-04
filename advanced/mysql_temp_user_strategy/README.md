@@ -1,6 +1,6 @@
-# MySQL Lambda Strategy
+# MySQL Temp User Strategy
 
-A starter template that implements a MySQL Sym Flow using an AWS Lambda to create temporary database users.
+Manage access to an RDS MySQL instance by creating temporary database users that are stored in AWS Secrets Manager.
 
 ## Tutorial
 
