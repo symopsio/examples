@@ -22,7 +22,7 @@ def get_repos(event):
 
     # Use the GitHub API to get the first 100 public repos in the Symopsio organization
     response = requests.get(
-        url="https://api.github.com/orgs/symopsio/repos?per_page=100&type=public",
+        url="https://api.github.com/orgs/sym-test/repos?per_page=100&type=private",
         headers=headers
     )
     if not response.ok:

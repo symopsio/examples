@@ -86,8 +86,8 @@ resource "sym_integration" "github" {
 resource "sym_target" "private-repo" {
   type = "github_repo"
 
-  name  = "public-repos"
-  label = "Public Repos"
+  name  = "private-repos"
+  label = "Private Repos"
 
   # A special attribute indicating which settings will be dynamically populated by prompt fields.
   # In this case, the setting is the required `repo_name` setting. The value will be populated by the
