@@ -6,10 +6,9 @@ import string
 from dataclasses import dataclass
 from typing import Optional
 
+from config import Config
 from psycopg2 import sql
 from psycopg2.extensions import connection as Connection
-
-from config import Config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

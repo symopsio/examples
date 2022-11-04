@@ -5,10 +5,8 @@ import sys
 
 import botocore
 import psycopg2
-
-from sym.sdk.resource import SRN
-
 from config import Config, get_config
+from sym.sdk.resource import SRN
 from user_manager import UserEvent, UserManager
 
 logger = logging.getLogger(__name__)
