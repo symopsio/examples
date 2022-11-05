@@ -82,6 +82,7 @@ def format_db_user(username: str, run_id: str) -> str:
 # Initialize stuff outside of the handler code so it can be reused across requests
 try:
     config = get_config()
+    logger.debug(f"Loaded config for host: {config.db_host}")
     conn = pymysql.connect(
         host=config.db_host,
         port=config.db_port,
@@ -89,6 +90,7 @@ try:
         password=config.db_pass,
         connect_timeout=5,
     )
+    logger.debug(f"Connected to host: {config.db_host}")
     user_manager = UserManager(config, conn)
 except pymysql.MySQLError as e:
     logger.error("ERROR: Unexpected error: Could not connect to DB")

@@ -41,6 +41,7 @@ module "postgres_lambda_function" {
 
   environment_variables = {
     "DB_HOST"         = local.db_config["host"]
+    "DB_NAME"         = local.db_config["name"]
     "DB_PASSWORD_KEY" = local.db_password_key
     "DB_PORT"         = local.db_config["port"]
     "DB_USER"         = local.db_config["user"]
@@ -107,7 +108,10 @@ module "postgres_lambda_layer" {
   }]
 
   build_in_docker = true
-  runtime         = "python3.8"
+  docker_additional_options = [
+    "--platform", "linux/amd64"
+  ]
+  runtime = "python3.8"
 
   tags = var.tags
 }

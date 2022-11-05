@@ -9,6 +9,7 @@ output "db_config" {
   value = {
     "host" = module.db.db_instance_address
     "port" = module.db.db_instance_port
+    "name" = module.db.db_instance_name
     "user" = module.db.db_instance_username
     "pass" = module.db.db_instance_password
   }

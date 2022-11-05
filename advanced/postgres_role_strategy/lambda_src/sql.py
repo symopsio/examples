@@ -1,8 +1,7 @@
 import logging
 
-from psycopg2 import sql
-
 from config import Config
+from psycopg2 import sql
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
