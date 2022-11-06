@@ -36,6 +36,7 @@ Advanced examples go beyond explaining the basics of Sym resources. Here you'll 
 | [Approve a CircleCI Job from Sym](advanced/approve_circleci_job)        | A Sym Flow that is triggered from CircleCI by the Sym Orb and then resumes the paused CircleCI workflow after approval |
 | [JIT access to SSH to EC2](advanced/aws_ec2_ssm)                        | A Sym Flow that grants SSH access to EC2 instances via AWS IAM Identity Center and AWS Session Manager                 |
 | [Custom Integration](advanced/custom_integration)                       | A Sym Flow that uses a Custom Integration to wire in services that aren't directly supported by the SDK                |
+| [Least Privilege S3 with K9 Security](advanced/k9_s3_target)            | Use a least-privilege bucket policy from K9 Security along with a Sym Flow to manage access to S3                      |
 | [Multiple Environments](advanced/multiple_environments)                 | Use Sym Environments and Terraform modules to easily deploy a separate test Sym Flow                                   |
 | [MySQL Temp User Strategy](advanced/mysql_temp_user_strategy)           | A Sym Flow that invokes an AWS Lambda to create temporary users to access to an AWS-hosted MySQL instance              |
 | [Postgres Role Strategy](advanced/postgres_role_strategy)               | A Sym Flow that invokes an AWS Lambda to temporarily grant users additional roles in an AWS-hosted PostgreSQL instance |
