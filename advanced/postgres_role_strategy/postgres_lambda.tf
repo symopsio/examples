@@ -42,6 +42,7 @@ module "postgres_lambda_function" {
   environment_variables = {
     "PG_HOST"         = local.db_config["host"]
     "PG_PASSWORD_KEY" = local.db_password_key
+    "PG_NAME"         = local.db_config["name"]
     "PG_PORT"         = local.db_config["port"]
     "PG_USER"         = local.db_config["user"]
   }
@@ -68,7 +69,7 @@ data "aws_iam_policy_document" "lambda_policy" {
 # for the lambda runtime
 module "postgres_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   create_layer = true
 
@@ -83,7 +84,10 @@ module "postgres_lambda_layer" {
   }]
 
   build_in_docker = true
-  runtime         = "python3.8"
+  docker_additional_options = [
+    "--platform", "linux/amd64"
+  ]
+  runtime = "python3.8"
 
   tags = var.tags
 }

@@ -3,6 +3,8 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+import boto3
+import botocore
 from boto3.session import Session
 
 logger = logging.getLogger(__name__)
@@ -46,7 +48,12 @@ def _get_db_password(session: Session) -> str:
 
     db_password_key = os.environ.get("DB_PASSWORD_KEY", "/symops.com/DB_PASSWORD")
 
-    ssm = session.client("ssm")
+    # Use an aggressive timeout here so we get a helpful message during initialization
+    # if the VPC cannot reach SSM. You can make this more lax if necessary.
+    ssm = boto3.client(
+        "ssm",
+        config=botocore.config.Config(connect_timeout=5, retries={"max_attempts": 0}),
+    )
     result = ssm.get_parameter(Name=db_password_key, WithDecryption=True)
     return result["Parameter"]["Value"]
 

@@ -2,10 +2,9 @@ import json
 import logging
 import sys
 
+from config import get_config
 from devtools import debug
 from psycopg2 import connect
-
-from config import get_config
 from sql import format_sql
 
 logger = logging.getLogger(__name__)
@@ -59,12 +58,15 @@ def update_user(username: str, event: dict) -> dict:
 # Get the DB connection outside of the handler so that it can be reused for better performance.
 try:
     config = get_config()
+    logger.debug(f"Loaded config for host: {config.pg_host}")
     conn = connect(
+        dbname=config.pg_name,
         host=config.pg_host,
         port=config.pg_port,
         user=config.pg_user,
         password=config.pg_pass,
     )
+    logger.debug(f"Connected to host: {config.pg_host}")
 except Exception as e:
     logger.error("ERROR: Unexpected error: Could not connect to DB")
     logger.error(e)

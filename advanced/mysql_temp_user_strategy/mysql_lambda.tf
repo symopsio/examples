@@ -91,7 +91,7 @@ data "aws_iam_policy_document" "lambda_policy" {
 # Use a layer to store module dependencies
 module "mysql_lambda_layer" {
   source  = "terraform-aws-modules/lambda/aws"
-  version = "~> 4.0.2"
+  version = "~> 4.6.0"
 
   create_layer = true
 
@@ -106,7 +106,10 @@ module "mysql_lambda_layer" {
   }]
 
   build_in_docker = true
-  runtime         = "python3.8"
+  docker_additional_options = [
+    "--platform", "linux/amd64"
+  ]
+  runtime = "python3.8"
 
   tags = var.tags
 }
