@@ -63,7 +63,7 @@ locals {
  * grants the administrator and the s3_access permission sets access to the bucket.
  */
 module "k9_bucket_policy" {
-  source = "github.com/k9securityio/terraform-aws-s3-bucket//k9policy"
+  source = "k9securityio/s3-bucket/aws//k9policy"
 
   s3_bucket_arn = module.s3_bucket.s3_bucket_arn
 
