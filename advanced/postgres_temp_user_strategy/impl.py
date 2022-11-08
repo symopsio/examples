@@ -24,7 +24,11 @@ def after_escalate(event):
         return
 
     # Otherwise use the body returned by the Lambda function to tell the user
-    # what PostgreSQL username got escalated for them.
-    username = output["body"]["username"]
+    # what AWS Secrets Manager Secret their username and password are stored in
+    secret_name = output["body"]["secret_name"]
 
-    slack.send_message(event.get_actor("request"), f"Escalated db user: {username}")
+    message = (
+        f"Your generated username and password are stored in AWS Secrets Manager.\n"
+        f"Secret Name: {secret_name}\n"
+    )
+    slack.send_message(event.get_actor("request"), message)
