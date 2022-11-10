@@ -64,7 +64,7 @@ locals {
  */
 module "k9_bucket_policy" {
   source  = "k9securityio/s3-bucket/aws//k9policy"
-  version = "0.7.2"
+  version = "0.7.3"
 
   s3_bucket_arn = module.s3_bucket.s3_bucket_arn
 
