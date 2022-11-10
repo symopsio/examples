@@ -4,7 +4,7 @@ This example illustrates how to implement a Sym Flow that grants temporary acces
 
 ## Blog
 
-We discuss this example in more detail on our [blog](https://blog.symops.com/2022/11/10/least-privilege-s3-with-k9/).
+We discuss this example in more detail on our [blog](https://blog.symops.com/2022/11/10/s3-whac-a-mole/).
 
 For the basics on our AWS IAM Identity Center Strategy, check out a step-by-step tutorial [here](https://docs.symops.com/docs/aws-sso).
 
