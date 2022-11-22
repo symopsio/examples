@@ -97,8 +97,8 @@ resource "sym_target" "onelogin_test_role" {
   }
 
   # A special attribute indicating which settings will be dynamically populated by prompt fields.
-  # In this case, the setting is the required `privilege_level` setting. The value will be populated by the
-  # `privilege_level` field in the `sym_flow.params.prompt_fields_json` attribute.
+  # In this case, the setting is the required `privilege_level` setting. The value will be populated by a
+  # `privilege_level` Prompt Field in the `sym_flow.params` attribute.
   field_bindings = ["privilege_level"]
 }
 
