@@ -9,7 +9,7 @@ https://user-images.githubusercontent.com/86599462/203186394-af797f9b-fc5c-4614-
 
 ## Tutorial
 
-A step-by-step tutorial will be available soon!
+Check out a step-by-step tutorial [here](https://docs.symops.com/docs/onelogin).
 
 ## About Sym
 
