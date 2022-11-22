@@ -5,7 +5,7 @@ in OneLogin. In particular, Sym's OneLogin Access Strategy allows users to becom
 and this example makes use of [Dynamic Targets](https://docs.symops.com/docs/dynamic-target-settings) to allow users
 to select which they want when making their request.
 
-TBD: Video here
+https://user-images.githubusercontent.com/86599462/203186394-af797f9b-fc5c-4614-82a7-d9eab3ff2a5b.mov
 
 ## Tutorial
 
