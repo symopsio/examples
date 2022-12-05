@@ -30,7 +30,6 @@ resource "sym_flow" "this" {
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
   name            = var.environment_name
-  runtime_id      = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -50,8 +49,4 @@ resource "sym_integration" "slack" {
 resource "sym_error_logger" "slack" {
   integration_id = sym_integration.slack.id
   destination    = var.error_channel_name
-}
-
-resource "sym_runtime" "this" {
-  name = var.environment_name
 }
