@@ -2,7 +2,7 @@
 
 This example illustrates how to configure a GitHub Strategy that uses Dynamic Access Targets to allow requesters to input the repository they wish to access.
 
-https://user-images.githubusercontent.com/10479740/178318567-83eca8d4-3def-40d0-a506-dfd2db81f867.mov
+https://user-images.githubusercontent.com/10479740/200004614-e1a73240-260c-4fb4-a24c-5a3c267242c3.mov
 
 ## Tutorial
 

@@ -91,7 +91,7 @@ resource "sym_target" "private-repo" {
 
   # A special attribute indicating which settings will be dynamically populated by prompt fields.
   # In this case, the setting is the required `repo_name` setting. The value will be populated by the
-  # `repo_name` field in the `sym_flow.params.prompt_fields_json` attribute.
+  # `repo_name` field in the `sym_flow.params.prompt_fields` attribute.
   field_bindings = ["repo_name"]
 }
 
@@ -126,6 +126,10 @@ resource "sym_flow" "this" {
       label    = "Repository Name"
       type     = "string"
       required = true
+
+      # Setting prefetch = true means that this field's allowed values will be populated by
+      # a prefetch reducer defined in the impl.py
+      prefetch = true
     }
 
     prompt_field {
