@@ -1,4 +1,4 @@
-sym_org_slug       = "CHANGEME"
+sym_org_id         = "CHANGEME"
 slack_workspace_id = "CHANGEME"
 
 flow_variables = {
