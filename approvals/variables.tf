@@ -22,7 +22,7 @@ variable "slack_workspace_id" {
 }
 
 variable "sym_org_id" {
-  description = "ID for your organization in Sym."
+  description = "ID for your organization in Sym. (e.g. `S-VJ2IYOCQ74`)"
   type        = string
 }
 
