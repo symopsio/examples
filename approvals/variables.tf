@@ -21,8 +21,8 @@ variable "slack_workspace_id" {
   type        = string
 }
 
-variable "sym_org_slug" {
-  description = "Uniquely identifying slug for your organization in Sym."
+variable "sym_org_id" {
+  description = "ID for your organization in Sym. (e.g. `S-VJ2IYOCQ74`)"
   type        = string
 }
 

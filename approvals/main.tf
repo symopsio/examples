@@ -1,5 +1,5 @@
 provider "sym" {
-  org = var.sym_org_slug
+  org = var.sym_org_id
 }
 
 resource "sym_flow" "this" {
