@@ -25,7 +25,7 @@ def get_repos(event):
     page = 1
 
     while True:
-        # Use the GitHub API to get the first 100 private repos in the Sym Test organization
+        # Use the GitHub API to get all the private repos in the Sym Test organization (paginated)
         response = requests.get(
             url=f"https://api.github.com/orgs/sym-test/repos?per_page={per_page}&page={page}&type=private",
             headers=headers

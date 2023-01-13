@@ -1,6 +1,6 @@
 # Using modules to support multiple environments
 
-This example shows a simple way to refactor the [approvals](/approvals/) example into a module so it may be reused to support multiple environments.
+This example shows a simple way to refactor the [approvals](/basic/approvals/) example into a module so it may be reused to support multiple environments.
 
 This setup is useful if you want to have separate deployments for testing and production.
 
