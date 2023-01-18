@@ -13,7 +13,7 @@ This document describes a set of steps for how to create a structurally consiste
 	  - A title with a descriptor of the example, e.g. `Okta Access Strategy`.
 	  - 1-2 sentence description of what the Flow does.
 	  - A short screen recording, if possible.
-	  - See the [`okta_access_strategy/README.md`](https://github.com/symopsio/examples/blob/main/okta_access_strategy/README.md) for an example.
+	  - See the [`okta_access_strategy/README.md`](basic/okta_access_strategy/README.md) for an example.
   - `impl.py`
 	  - The minimal `impl.py` needed for the example to run.
   - `main.tf`
@@ -25,13 +25,13 @@ This document describes a set of steps for how to create a structurally consiste
 ## Constructing an Example
 ### Implementing
 - Implement your example in a new folder
-- Add a README.md. You can use the `approvals` README.md as a template
+- Add a README.md. You can use the `basic/approvals` README.md as a template
 - Add a screen recording to your example's README.md
 - Run `terraform fmt`
 - Commit your example
 
 ### Update the top-level README.md
-- Add a row to the Content table in the root directory's [README.md](https://github.com/symopsio/examples/blob/main/README.md).
+- Add a row to the Content table in the root directory's [README.md](README.md).
 - Make sure the table is in alphabetical order (i.e. the same order as the folders).
 
 ### Tips & Recommendations
