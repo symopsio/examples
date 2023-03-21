@@ -27,7 +27,7 @@ module "sso_connector" {
   }
 
   environment       = "main"
-  runtime_role_arns = [module.runtime_connector.settings["role_arn"]]
+  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
 }
 
 # The Integration your Strategy uses to manage SSO Permission Sets

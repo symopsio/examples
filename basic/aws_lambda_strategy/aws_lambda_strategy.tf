@@ -19,7 +19,7 @@ module "lambda_connector" {
 
   environment       = "main"
   lambda_arns       = [module.lambda_function.lambda_function_arn]
-  runtime_role_arns = [module.runtime_connector.settings.role_arn]
+  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
 }
 
 # The Integration your Strategy uses to invoke Lambdas.
