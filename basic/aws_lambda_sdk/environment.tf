@@ -15,6 +15,9 @@ resource "sym_environment" "this" {
 
   integrations = {
     slack_id = sym_integration.slack.id
+
+    # This `aws_lambda_id` is required to be able to use the `aws_lambda` SDK methods
+    aws_lambda_id = sym_integration.lambda_context.id
   }
 }
 

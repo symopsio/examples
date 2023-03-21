@@ -1,7 +1,3 @@
-locals {
-  environment_name = "prod"
-}
-
 provider "sym" {
   org = var.sym_org_id
 }

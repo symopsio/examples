@@ -14,6 +14,13 @@ resource "sym_environment" "this" {
 
   integrations = {
     slack_id = sym_integration.slack.id
+
+    # The GitHub Access Token is implicitly available to your GitHub Flow's impl.py,
+    # so this line is optional if you only need to use `sym.sdk.integrations.github` methods in your GitHub Flow.
+    #
+    # But if you wish to use the `sym.sdk.integrations.github` methods in a different Flow in this Environment,
+    # you must include this `github_id = sym_integration.github.id` here.
+    github_id = sym_integration.github.id
   }
 }
 

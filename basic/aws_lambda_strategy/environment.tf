@@ -10,6 +10,7 @@ provider "sym" {
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
   name            = local.environment_name
+  runtime_id      = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -30,4 +31,11 @@ resource "sym_integration" "slack" {
 resource "sym_error_logger" "slack" {
   integration_id = sym_integration.slack.id
   destination    = "#sym-errors"
+}
+
+resource "sym_runtime" "this" {
+  name = "main"
+
+  # Give the Sym Runtime the permissions defined by the runtime_connector module.
+  context_id = sym_integration.runtime_context.id
 }
