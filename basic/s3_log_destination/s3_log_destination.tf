@@ -21,8 +21,8 @@ resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
   }
 
   tags = {
-    # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
-    # because the aws/kinesis-firehose add-on only grants access to Firehoses tagged with a matching SymEnv value
+    # This SymEnv tag is required and MUST match the SymEnv tag in the 
+    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
     SymEnv = "main"
   }
 }
@@ -41,6 +41,8 @@ resource "sym_flow" "this" {
   label = "Approval"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {

@@ -4,6 +4,8 @@ module "iam_connector" {
   version = ">= 1.0.0"
 
   environment       = "main"
+
+  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
   runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
 }
 
@@ -48,6 +50,8 @@ resource "sym_flow" "this" {
   label = "AWS IAM Group Access"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {

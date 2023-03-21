@@ -3,6 +3,8 @@ resource "sym_flow" "this" {
   label = "Approval"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   vars = var.flow_variables

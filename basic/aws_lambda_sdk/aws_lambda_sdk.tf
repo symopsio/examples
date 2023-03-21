@@ -19,6 +19,8 @@ module "lambda_connector" {
 
   environment       = "main"
   lambda_arns       = [module.lambda_function.lambda_function_arn]
+
+  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
   runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
 }
 
@@ -38,6 +40,8 @@ resource "sym_flow" "this" {
   label = "AWS Lambda SDK Example"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   vars = {
@@ -49,10 +53,10 @@ resource "sym_flow" "this" {
     # Each prompt_field defines a custom form field for the Slack modal that
     # requesters fill out to make their requests.
     prompt_field {
-        name     = "resource"
-        label    = "What do you need access to?"
-        type     = "string"
-        required = true
+      name     = "resource"
+      label    = "What do you need access to?"
+      type     = "string"
+      required = true
     }
 
     prompt_field {

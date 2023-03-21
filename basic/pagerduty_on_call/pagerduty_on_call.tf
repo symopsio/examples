@@ -4,8 +4,8 @@ resource "aws_secretsmanager_secret" "pagerduty_api_key" {
   name        = "main/pagerduty-api-key"
   description = "API Key for Sym to call PagerDuty APIs"
 
-  # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
-  # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
+  # This SymEnv tag is required and MUST match the SymEnv tag in the 
+  # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
   tags = {
     SymEnv = "main"
   }
@@ -41,6 +41,8 @@ resource "sym_flow" "this" {
   label = "Approval"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {

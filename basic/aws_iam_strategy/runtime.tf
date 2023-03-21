@@ -94,3 +94,10 @@ resource "sym_integration" "runtime_context" {
     account_id  = data.aws_caller_identity.current.account_id
   }
 }
+
+resource "sym_runtime" "this" {
+  name = "main"
+
+  # Give the Sym Runtime the permissions defined by the runtime_context resource.
+  context_id = sym_integration.runtime_context.id
+}

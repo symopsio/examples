@@ -16,7 +16,7 @@ module "datadog_connector" {
 resource "sym_log_destination" "datadog" {
   type = "kinesis_firehose"
 
-  # The Runtime Permission Context has Kinesis Firehose permissions from the aws/kinesis-firehose add-on
+  # The Runtime Permission Context has Kinesis Firehose permissions
   integration_id = sym_integration.runtime_context.id
 
   settings = {
@@ -31,6 +31,8 @@ resource "sym_flow" "this" {
   label = "Approval"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {

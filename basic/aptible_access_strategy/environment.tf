@@ -1,5 +1,5 @@
 locals {
-  environment_name = "prod"
+  environment_name = "main"
 }
 
 provider "sym" {

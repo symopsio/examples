@@ -19,6 +19,8 @@ module "lambda_connector" {
 
   environment       = "main"
   lambda_arns       = [module.lambda_function.lambda_function_arn]
+
+  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
   runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
 }
 
@@ -65,6 +67,8 @@ resource "sym_flow" "this" {
   label = "Super Secret Access"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {
@@ -82,10 +86,10 @@ resource "sym_flow" "this" {
     }
 
     prompt_field {
-        name           = "duration"
-        type           = "duration"
-        allowed_values = ["30m", "1h"]
-        required       = true
+      name           = "duration"
+      type           = "duration"
+      allowed_values = ["30m", "1h"]
+      required       = true
     }
   }
 }

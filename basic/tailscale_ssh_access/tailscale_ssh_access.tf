@@ -4,8 +4,8 @@ resource "aws_secretsmanager_secret" "tailscale_api_key" {
   name        = "main/tailscale-api-key"
   description = "API Key for Sym to call Tailscale APIs"
 
-  # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
-  # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
+  # This SymEnv tag is required and MUST match the SymEnv tag in the 
+  # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
   tags = {
     SymEnv = "main"
   }
@@ -87,6 +87,8 @@ resource "sym_flow" "this" {
   label = "Tailscale SSH Access"
 
   implementation = "${path.module}/impl.py"
+
+  # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
 
   params {

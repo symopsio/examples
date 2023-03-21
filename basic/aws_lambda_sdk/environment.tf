@@ -1,5 +1,5 @@
 locals {
-  environment_name = "prod"
+  environment_name = "main"
 }
 
 provider "sym" {
@@ -34,11 +34,4 @@ resource "sym_integration" "slack" {
 resource "sym_error_logger" "slack" {
   integration_id = sym_integration.slack.id
   destination    = "#sym-errors"
-}
-
-resource "sym_runtime" "this" {
-  name = "main"
-
-  # Give the Sym Runtime the permissions defined by the runtime_context resource.
-  context_id = sym_integration.runtime_context.id
 }
