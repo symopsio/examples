@@ -80,7 +80,7 @@ resource "sym_flow" "this" {
   name  = "okta"
   label = "Okta Group Request"
 
-  implementation = "${path.module}/impls/impl.py"
+  implementation = "${path.module}/impl.py"
   environment_id = sym_environment.this.id
 
   params {
