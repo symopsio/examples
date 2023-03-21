@@ -14,6 +14,13 @@ resource "sym_environment" "this" {
 
   integrations = {
     slack_id = sym_integration.slack.id
+
+    # The OneLogin API Client ID and Secret is implicitly available to your OneLogin Flow's impl.py,
+    # so this line is optional if you only need to use `sym.sdk.integrations.onelogin` methods with your OneLogin Flow.
+    #
+    # But if you wish to use the `sym.sdk.integrations.onelogin` methods in a different Flow in this Environment,
+    # you must include this `onelogin_id = sym_integration.onelogin.id` here.
+    onelogin_id = sym_integration.onelogin.id
   }
 }
 

@@ -14,6 +14,10 @@ resource "sym_environment" "this" {
 
   integrations = {
     slack_id = sym_integration.slack.id
+
+    # This `pagerduty_id` is required to be able to use the `pagerduty` SDK methods
+    # It tells the Sym Runtime to use the API Token defined in the `sym_integration.pagerduty` resource
+    pagerduty_id = sym_integration.pagerduty.id
   }
 }
 
