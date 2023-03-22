@@ -7,7 +7,7 @@ resource "aws_secretsmanager_secret" "github_access_token" {
   tags = {
     # This SymEnv tag is required and MUST match the SymEnv tag in the 
     # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
-    SymEnv = "main"
+    SymEnv = local.environment_name
   }
 }
 

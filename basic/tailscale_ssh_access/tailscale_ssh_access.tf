@@ -7,7 +7,7 @@ resource "aws_secretsmanager_secret" "tailscale_api_key" {
   # This SymEnv tag is required and MUST match the SymEnv tag in the 
   # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
   tags = {
-    SymEnv = "main"
+    SymEnv = local.environment_name
   }
 }
 
