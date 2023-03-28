@@ -26,7 +26,7 @@ module "sso_connector" {
     aws = aws.sso
   }
 
-  environment       = "main"
+  environment = "main"
 
   # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
   runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
