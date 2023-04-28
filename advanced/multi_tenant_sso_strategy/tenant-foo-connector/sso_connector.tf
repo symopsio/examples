@@ -5,12 +5,11 @@
 # This should be applied using AWS credentials that have the permissions to read and write IAM Roles in the
 
 provider "aws" {
-  alias  = "tenant_a"
   region = "us-east-1"
 
   # This profile should be configured permissions to read and write IAM Roles in the Tenant A SSO Management Account,
   # and permissions to read SSO resources.
-  profile = "tenant-a-sso-provisioning"
+  profile = "tenant-foo-sso-provisioning"
 }
 
 # SSO management account, as well as read AWS SSO resources.
@@ -20,7 +19,9 @@ module "sso_connector" {
   source  = "symopsio/sso-connector/aws"
   version = ">= 1.0.0"
 
-  environment       = "tenant-a"
+  environment = "tenant-foo"
+
+  # This should be the value of aws_iam_role.sym_runtime_connector_role.arn (defined in runtime.tf)
   runtime_role_arns = ["arn:aws:iam::803477428605:role/sym/SymRuntimeSSOExample"]
 }
 

@@ -36,7 +36,7 @@ resource "sym_strategy" "multi_tenant_sso_aws_sso" {
 
 resource "sym_flow" "multi_tenant_sso_aws_sso" {
   name  = "multi-tenant-sso-flow-${var.tenant_slug}"
-  label = "AWS SSO Access (${title(var.tenant_slug)}"
+  label = "AWS SSO Access (${title(var.tenant_slug)})"
 
   implementation = "${path.module}/impl.py"
   environment_id = var.sym_environment.id
