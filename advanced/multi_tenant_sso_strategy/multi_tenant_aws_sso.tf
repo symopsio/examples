@@ -5,9 +5,8 @@ locals {
   ]
 }
 
-# A module that creates an AWS SSO Sym Flow that escalates Users to the 123456789 Account with PowerUser permissions
-# in the Tenant A SSO instance.
-module "tenant_a_power_user" {
+# A module that creates an AWS SSO Sym Flow that escalates Users as configured by the "customer_tenants` tfvar.
+module "sso_access" {
   for_each = var.customer_tenants
 
   source = "./sso_flow"
