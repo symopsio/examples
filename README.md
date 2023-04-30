@@ -34,6 +34,7 @@ Advanced examples go beyond explaining the basics of Sym resources. Here you'll 
 | Advanced Example                                                        | Description                                                                                                            |
 |-------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
 | [Approve a CircleCI Job from Sym](advanced/approve_circleci_job)        | A Sym Flow that is triggered from CircleCI by the Sym Orb and then resumes the paused CircleCI workflow after approval |
+| [JIT access to multiple AWS Organizations](advanced/multi_tenant_sso_strategy) | Grant access to multiple tenant AWS Organizations from a centralized host AWS organization                      |
 | [JIT access to SSH to EC2](advanced/aws_ec2_ssm)                        | A Sym Flow that grants SSH access to EC2 instances via AWS IAM Identity Center and AWS Session Manager                 |
 | [Custom Integration](advanced/custom_integration)                       | A Sym Flow that uses a Custom Integration to wire in services that aren't directly supported by the SDK                |
 | [Least Privilege S3 with K9 Security](advanced/k9_s3_target)            | Use a least-privilege bucket policy from K9 Security along with a Sym Flow to manage access to S3                      |
