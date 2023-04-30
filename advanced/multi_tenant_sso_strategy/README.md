@@ -17,9 +17,9 @@ Even though the SSO Connectors are different, in many cases the flow configurati
 
 ## Adding new tenants
 
-Add a configuration object to `customer_tenants` in [`terraform.tfvars`](terraform.tfvars) and then this example will add a new SSO flow for that tenant. Each configuration object takes the minimum required configurations to set up an SSO flow:
+Add a configuration object to `customer_tenants` in [`terraform.tfvars`](terraform.tfvars) and then this example will provision a new SSO flow for that tenant. Each configuration object takes the minimum required configurations to set up an SSO flow:
 
-1. `sso_account_id`: The tenant AWS Accuont ID where the SSO Connector Role is defined
+1. `sso_account_id`: The tenant AWS Account ID where the SSO Connector Role is defined
 2. `sso_connector_settings`: The settings created by Sym's SSO Connector module for this tenant
 3. `permission_set_arn`: The Permission Set that users can request access to in the tenant organization
 4. `target_account_id`: The Account ID that users can request access to in the tenant organization
