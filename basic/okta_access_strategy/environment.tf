@@ -6,6 +6,10 @@ provider "sym" {
   org = "sym-example"
 }
 
+provider "aws" {
+  region = "us-east-1"
+}
+
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
