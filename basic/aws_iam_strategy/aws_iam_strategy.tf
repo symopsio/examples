@@ -1,22 +1,3 @@
-# The AWS IAM Resources that enable Sym to manage IAM Groups
-module "iam_connector" {
-  source  = "symopsio/iam-connector/aws"
-  version = ">= 1.0.0"
-
-  environment       = "main"
-
-  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
-  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
-}
-
-# The Integration your Strategy uses to manage IAM Groups
-resource "sym_integration" "iam_context" {
-  type        = "permission_context"
-  name        = "main-iam"
-  external_id = module.iam_connector.settings.account_id
-  settings    = module.iam_connector.settings
-}
-
 ############ IAM Strategy Setup ##############
 
 # A target AWS IAM Group that your Sym Strategy can manage access to
