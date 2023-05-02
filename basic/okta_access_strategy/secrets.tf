@@ -23,7 +23,7 @@ EOT
 
 resource "aws_iam_role_policy_attachment" "attach_secrets_manager_access" {
   policy_arn = aws_iam_policy.secrets_manager_access.arn
-  role       = module.runtime_connector.sym_runtime_connector_role_name
+  role       = module.runtime_connector.sym_runtime_connector_role.name
 }
 
 # This resource tells Sym how to access your AWS account's Secrets Manager instance.
@@ -34,6 +34,6 @@ resource "sym_secrets" "this" {
   settings = {
     # This tells Sym to use the sym_integration defined in the runtime_connector module when accessing
     # your AWS account's Secrets Manager.
-    context_id = module.runtime_connector.sym_integration_runtime_context_id
+    context_id = module.runtime_connector.sym_integration.id
   }
 }
