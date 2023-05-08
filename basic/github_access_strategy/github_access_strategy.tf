@@ -1,7 +1,7 @@
 # An AWS Secrets Manager Secret to hold your GitHub Access Token. Set the value with:
 # aws secretsmanager put-secret-value --secret-id "main/github-access-token" --secret-string "YOUR-GITHUB-ACCESS-TOKEN"
 resource "aws_secretsmanager_secret" "github_access_token" {
-  name        = "main/github-access-token"
+  name        = "${local.environment_name}/github-access-token"
   description = "API Key for Sym to call GitHub APIs"
 
   tags = {
@@ -24,7 +24,7 @@ resource "sym_secret" "github_access_token" {
 # The GitHub Integration that your Sym Strategy uses to manage your GitHub Repo targets
 resource "sym_integration" "github" {
   type = "github"
-  name = "main-github-integration"
+  name = "${local.environment_name}-github-integration"
 
   # The external ID is your GitHub Organization name
   external_id = "sym-test"
@@ -42,7 +42,7 @@ resource "sym_integration" "github" {
 resource "sym_target" "private-repo" {
   type = "github_repo"
 
-  name  = "main-private-repo-access"
+  name  = "${local.environment_name}-private-repo-access"
   label = "Private Repo"
 
   settings = {
@@ -56,7 +56,7 @@ resource "sym_target" "private-repo" {
 resource "sym_target" "other-private-repo" {
   type = "github_repo"
 
-  name  = "main-other-private-repo-access"
+  name  = "${local.environment_name}-other-private-repo-access"
   label = "Other Private Repo"
 
   settings = {
@@ -69,7 +69,7 @@ resource "sym_target" "other-private-repo" {
 # The Strategy your Flow uses to escalate to GitHub Repositories
 resource "sym_strategy" "github" {
   type           = "github"
-  name           = "main-github-strategy"
+  name           = "${local.environment_name}-github-strategy"
   integration_id = sym_integration.github.id
 
   # This must be a list of `github_repo` sym_targets that users can request to be escalated to
