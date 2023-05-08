@@ -30,8 +30,8 @@ resource "aws_iam_policy" "aws_kinesis_firehose" {
 EOT
 }
 
-# Attach the IAM policy declared above to the Runtime Connector Role defined in runtime.tf
+# Attach the IAM policy declared above to the Runtime Connector Role output by runtime_connector
 resource "aws_iam_role_policy_attachment" "aws_kinesis_firehose_attach" {
   policy_arn = aws_iam_policy.aws_kinesis_firehose.arn
-  role       = aws_iam_role.sym_runtime_connector_role.name
+  role       = module.runtime_connector.sym_runtime_connector_role.name
 }
