@@ -11,8 +11,6 @@ module "datadog_connector" {
   # Set it in an untracked tfvars file (e.g. `secrets.tfvars`)
   # or as an environment variable: `export TF_VAR_datadog_access_key="my-access-key"`
   datadog_access_key = var.datadog_access_key
-  buffering_interval = 60
-  buffering_size = 1
 }
 
 resource "sym_log_destination" "datadog" {
