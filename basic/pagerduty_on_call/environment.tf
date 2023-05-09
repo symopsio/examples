@@ -3,7 +3,7 @@ locals {
 }
 
 provider "sym" {
-  org = "sym-example"
+  org = "sym"
 }
 
 # The sym_environment is a container for sym_flows that share configuration values
