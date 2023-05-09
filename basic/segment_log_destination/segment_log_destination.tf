@@ -1,10 +1,10 @@
 # aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
 resource "aws_secretsmanager_secret" "segment_write_key" {
-  name        = "main/segment-write-key"
+  name        = "${local.environment_name}/segment-write-key"
   description = "Segment Write Key for Sym Audit Logs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the 
+    # This SymEnv tag is required and MUST match the SymEnv tag in the
     # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
     SymEnv = local.environment_name
   }
@@ -18,7 +18,7 @@ resource "sym_secret" "segment_write_key" {
 
 resource "sym_integration" "segment" {
   type = "segment"
-  name = "main-segment-integration"
+  name = "${local.environment_name}-segment-integration"
 
   # Your Segment Workspace name
   external_id = "sym-test"
@@ -37,7 +37,7 @@ resource "sym_log_destination" "segment" {
 
   settings = {
     # A unique name for this log destination
-    stream_name = "segment-main"
+    stream_name = "segment-${local.environment_name}"
   }
 }
 
