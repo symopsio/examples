@@ -1,5 +1,9 @@
+locals {
+  aws_region = "us-east-1"
+}
+
 provider "aws" {
-  region = "us-east-1"
+  region = local.aws_region
 }
 
 # The runtime_connector module creates an IAM Role that the Sym Runtime can assume to execute operations in your AWS account.
