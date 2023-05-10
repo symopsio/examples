@@ -1,12 +1,12 @@
 # An AWS Secrets Manager Secret to hold your OneLogin API Client Secret (the Client ID will be set below).
 # Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/onelogin-client-secret" --secret-string "YOUR-ONELOGIN-CLIENT-SECRET"
+# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/onelogin-client-secret" --secret-string "YOUR-ONELOGIN-CLIENT-SECRET"
 resource "aws_secretsmanager_secret" "onelogin_client_secret" {
-  name        = "main/onelogin-client-secret"
+  name        = "${local.environment_name}/onelogin-client-secret"
   description = "API Client Secret for Sym to call OneLogin APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the 
+    # This SymEnv tag is required and MUST match the SymEnv tag in the
     # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
     SymEnv = local.environment_name
   }
@@ -25,7 +25,7 @@ resource "sym_secret" "onelogin_client_secret" {
 # The OneLogin Integration that your Sym Strategy uses to manage your OneLogin Role targets
 resource "sym_integration" "onelogin" {
   type = "onelogin"
-  name = "main-onelogin-integration"
+  name = "${local.environment_name}-onelogin-integration"
 
   # The external ID is your OneLogin domain. Replace this value.
   external_id = "sym-example.onelogin.com"
@@ -61,7 +61,7 @@ resource "sym_target" "onelogin_test_role" {
 # The Strategy your Flow uses to escalate to OneLogin Roles
 resource "sym_strategy" "onelogin" {
   type           = "onelogin"
-  name           = "main-onelogin-strategy"
+  name           = "${local.environment_name}-onelogin-strategy"
   integration_id = sym_integration.onelogin.id
 
   # This must be a list of `onelogin_role` sym_targets that users can request to be escalated to
@@ -72,7 +72,7 @@ resource "sym_flow" "this" {
   name  = "onelogin"
   label = "OneLogin Role Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
