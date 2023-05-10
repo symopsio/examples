@@ -12,7 +12,7 @@ resource "sym_integration" "okta" {
 }
 
 # An AWS Secrets Manager Secret to hold your Okta API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/okta-api-key" --secret-string "YOUR-OKTA-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/okta-api-key" --secret-string "YOUR-OKTA-API-KEY"
 resource "aws_secretsmanager_secret" "okta_api_key" {
   name        = "${local.environment_name}/okta-api-key"
   description = "API Key for Sym to call Okta APIs"
