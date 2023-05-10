@@ -1,7 +1,7 @@
 # The Okta Integration that your Sym Strategy uses to manage your Okta targets
 resource "sym_integration" "okta" {
   type        = "okta"
-  name        = "main-okta-integration"
+  name        = "${local.environment_name}-okta-integration"
   external_id = "dev-12345.okta.com"
 
   settings = {
@@ -14,11 +14,11 @@ resource "sym_integration" "okta" {
 # An AWS Secrets Manager Secret to hold your Okta API Key. Set the value with:
 # aws secretsmanager put-secret-value --secret-id "main/okta-api-key" --secret-string "YOUR-OKTA-API-KEY"
 resource "aws_secretsmanager_secret" "okta_api_key" {
-  name        = "main/okta-api-key"
+  name        = "${local.environment_name}/okta-api-key"
   description = "API Key for Sym to call Okta APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the 
+    # This SymEnv tag is required and MUST match the SymEnv tag in the
     # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
     SymEnv = local.environment_name
   }
@@ -38,7 +38,7 @@ resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
