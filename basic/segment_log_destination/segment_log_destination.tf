@@ -1,4 +1,4 @@
-# aws secretsmanager put-secret-value --secret-id "main/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
+# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
 resource "aws_secretsmanager_secret" "segment_write_key" {
   name        = "${local.environment_name}/segment-write-key"
   description = "Segment Write Key for Sym Audit Logs"
