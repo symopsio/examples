@@ -6,7 +6,7 @@ module "kinesis_firehose_connector" {
   source  = "symopsio/kinesis-firehose-connector/aws"
   version = ">= 3.0.0"
 
-  environment = "main"
+  environment = local.environment_name
 }
 
 # A Kinesis Firehose Delivery Stream that sends logs to an S3 bucket configured by the kinesis_firehose_connector module
@@ -21,7 +21,7 @@ resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
   }
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the 
+    # This SymEnv tag is required and MUST match the SymEnv tag in the
     # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
     SymEnv = local.environment_name
   }
@@ -30,7 +30,8 @@ resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
 # A Kinesis Firehose Log destination pointing to the S3 Firehose Delivery Stream
 resource "sym_log_destination" "s3_firehose" {
   type           = "kinesis_firehose"
-  integration_id = sym_integration.runtime_context.id
+  integration_id = module.runtime_connector.sym_integration.id
+
   settings = {
     stream_name = aws_kinesis_firehose_delivery_stream.sym_logs.name
   }
@@ -40,7 +41,7 @@ resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id

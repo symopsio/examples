@@ -11,6 +11,7 @@ provider "sym" {
 resource "sym_environment" "this" {
   name            = local.environment_name
   error_logger_id = sym_error_logger.slack.id
+  log_destination_ids = [sym_log_destination.s3_firehose.id]
 
   integrations = {
     slack_id = sym_integration.slack.id
