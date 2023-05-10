@@ -1,47 +1,4 @@
-# Set up a different provider for the SSO connector.
-# This is because you typically will put your Sym resources in a different
-# AWS account from your AWS SSO instance.
-provider "aws" {
-  alias  = "sso"
-  region = "us-east-1"
-
-  # Change this profile name to a valid AWS profile for the AWS account where
-  # your AWS SSO instance lives.
-  profile = "sso"
-}
-
-# Get the AWS Account ID for the SSO profile.
-data "aws_caller_identity" "sso" {
-  provider = aws.sso
-}
-
-# The AWS IAM Resources that enable Sym to manage SSO Permission Sets
-module "sso_connector" {
-  source  = "symopsio/sso-connector/aws"
-  version = ">= 1.0.0"
-
-  # Provision the SSO connector in the AWS account where your AWS
-  # SSO instance lives.
-  providers = {
-    aws = aws.sso
-  }
-
-  environment = "main"
-
-  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
-  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
-}
-
-# The Integration your Strategy uses to manage SSO Permission Sets
-resource "sym_integration" "sso_context" {
-  type        = "permission_context"
-  name        = "main-sso"
-  external_id = module.sso_connector.settings["instance_arn"]
-  settings    = module.sso_connector.settings
-}
-
 ############ SSO Strategy Setup ##############
-
 # A target AWS SSO Permission Set Assignment that your Sym Strategy can manage access to
 resource "sym_target" "power_user" {
   type = "aws_sso_permission_set"
@@ -60,7 +17,7 @@ resource "sym_target" "power_user" {
 # The Strategy your Flow uses to escalate to AWS SSO Permission Sets
 resource "sym_strategy" "aws_sso" {
   type           = "aws_sso"
-  name           = "main-aws-sso"
+  name           = "${local.environment_name}-aws-sso"
   integration_id = sym_integration.sso_context.id
 
   # This must be a list of `aws_sso_permission_set` sym_targets that users can request to be escalated to
@@ -75,7 +32,7 @@ resource "sym_flow" "this" {
   name  = "aws_sso"
   label = "AWS SSO Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
