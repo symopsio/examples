@@ -1,10 +1,10 @@
 ############ Runtime Connector Setup ##############
-# The runtime connector module creates both the AWS and Sym resources required to
+# The runtime_connector module creates an IAM Role that the Sym Runtime can assume to execute operations in your AWS account.
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
   version = "~> 2.0"
 
-  environment_name = local.environment_name
+  environment = local.environment_name
 }
 
 ############ AWS Lambda Connector Setup ##############
@@ -30,7 +30,6 @@ module "lambda_connector" {
   environment = local.environment_name
   lambda_arns = [module.lambda_function.lambda_function_arn]
 
-  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
   runtime_role_arns = [module.runtime_connector.sym_runtime_connector_role.arn]
 }
 
