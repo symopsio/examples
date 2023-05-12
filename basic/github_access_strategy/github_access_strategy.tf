@@ -1,12 +1,12 @@
 # An AWS Secrets Manager Secret to hold your GitHub Access Token. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/github-access-token" --secret-string "YOUR-GITHUB-ACCESS-TOKEN"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/github-access-token" --secret-string "YOUR-GITHUB-ACCESS-TOKEN"
 resource "aws_secretsmanager_secret" "github_access_token" {
-  name        = "${local.environment_name}/github-access-token"
+  name        = "sym/${local.environment_name}/github-access-token"
   description = "API Key for Sym to call GitHub APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the 
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `secrets_manager_access` module in your `secrets.tf` file
     SymEnv = local.environment_name
   }
 }
@@ -80,7 +80,7 @@ resource "sym_flow" "this" {
   name  = "github"
   label = "GitHub Repo Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
