@@ -2,7 +2,7 @@ terraform {
   required_providers {
     sym = {
       source  = "symopsio/sym"
-      version = "~> 2.0"
+      version = "~> 3.0"
     }
   }
 }
