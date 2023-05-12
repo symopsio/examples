@@ -80,7 +80,7 @@ resource "sym_flow" "this" {
   name  = "okta"
   label = "Okta Group Request"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
