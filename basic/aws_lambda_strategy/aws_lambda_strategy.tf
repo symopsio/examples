@@ -1,6 +1,3 @@
-
-############ Lambda Strategy Setup ##############
-
 # A target AWS Lambda that will be invoked on escalate and de-escalate.
 # The `name` will be used in the lambda to decide which resource to manage access to
 resource "sym_target" "super-secret-button" {
@@ -30,7 +27,7 @@ resource "sym_flow" "this" {
   name  = "aws-lambda"
   label = "Super Secret Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
