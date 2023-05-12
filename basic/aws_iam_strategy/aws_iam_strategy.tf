@@ -19,7 +19,7 @@ resource "sym_target" "cloudwatch_readonly" {
 # The Strategy your Flow uses to escalate to AWS IAM Groups
 resource "sym_strategy" "aws_iam" {
   type           = "aws_iam"
-  name           = "main-aws-iam"
+  name           = "${local.environment_name}-aws-iam"
   integration_id = sym_integration.iam_context.id
 
   # This must be a list of `aws_iam_group` sym_targets that users can request to be escalated to

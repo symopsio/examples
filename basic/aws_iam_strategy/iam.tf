@@ -2,7 +2,7 @@
 
 # An AWS IAM Group that grants Cloudwatch Read permissions
 resource "aws_iam_group" "cloudwatch_readonly" {
-  name = "main-cloudwatch-read"
+  name = "${local.environment_name}-cloudwatch-read"
   path = "/sym/"
 }
 

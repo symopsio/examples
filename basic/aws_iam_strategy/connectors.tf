@@ -4,14 +4,14 @@ module "runtime_connector" {
   source = "symopsio/runtime-connector/aws"
     version = "~> 2.0"
 
-  environment_name = local.environment_name
+  environment = local.environment_name
 }
 
 ############ AWS IAM Connector Setup ##############
 # The AWS IAM Resources that enable Sym to manage IAM Groups
 module "iam_connector" {
   source  = "symopsio/iam-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
   environment = local.environment_name
 
