@@ -1,12 +1,12 @@
 # An AWS Secrets Manager Secret to hold your Aptible Bot Token. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/aptible-bot-credentials" --secret-string '{"username":"YOUR_BOT_USERNAME","password":"YOUR_BOT_TOKEN"}'
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/aptible-bot-credentials" --secret-string '{"username":"YOUR_BOT_USERNAME","password":"YOUR_BOT_TOKEN"}'
 resource "aws_secretsmanager_secret" "aptible_bot_credentials" {
-  name        = "${local.environment_name}/aptible-bot-credentials"
+  name        = "sym/${local.environment_name}/aptible-bot-credentials"
   description = "API Key for Sym to call Aptible APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `secrets_manager_access` module in your `secrets.tf` file
     SymEnv = local.environment_name
   }
 }
