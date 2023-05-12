@@ -3,9 +3,9 @@
 # This module creates a AWS Kinesis Firehose Delivery Stream that pipes logs to Datadog
 module "datadog_connector" {
   source  = "symopsio/datadog-connector/aws"
-  version = ">= 2.0.0"
+  version = "~> 2.0"
 
-  environment = "main"
+  environment = local.environment_name
 
   # This variable should NOT be checked into version control!
   # Set it in an untracked tfvars file (e.g. `secrets.tfvars`)
@@ -25,12 +25,11 @@ resource "sym_log_destination" "datadog" {
   }
 }
 
-
 resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
