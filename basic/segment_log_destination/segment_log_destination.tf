@@ -1,11 +1,11 @@
-# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/segment-write-key" --secret-string "YOUR-SEGMENT-WRITE-KEY"
 resource "aws_secretsmanager_secret" "segment_write_key" {
-  name        = "${local.environment_name}/segment-write-key"
+  name        = "sym/${local.environment_name}/segment-write-key"
   description = "Segment Write Key for Sym Audit Logs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `secrets_manager_access` module in your `secrets.tf` file
     SymEnv = local.environment_name
   }
 }
