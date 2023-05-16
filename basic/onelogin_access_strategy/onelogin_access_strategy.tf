@@ -1,13 +1,13 @@
 # An AWS Secrets Manager Secret to hold your OneLogin API Client Secret (the Client ID will be set below).
 # Set the value with:
-# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/onelogin-client-secret" --secret-string "YOUR-ONELOGIN-CLIENT-SECRET"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/onelogin-client-secret" --secret-string "YOUR-ONELOGIN-CLIENT-SECRET"
 resource "aws_secretsmanager_secret" "onelogin_client_secret" {
-  name        = "${local.environment_name}/onelogin-client-secret"
+  name        = "sym/${local.environment_name}/onelogin-client-secret"
   description = "API Client Secret for Sym to call OneLogin APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `secrets_manager_access` module in your `secrets.tf` file
     SymEnv = local.environment_name
   }
 }
