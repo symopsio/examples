@@ -1,25 +1,12 @@
-# The Okta Integration that your Sym Strategy uses to manage your Okta targets
-resource "sym_integration" "okta" {
-  type        = "okta"
-  name        = "${local.environment_name}-okta-integration"
-  external_id = "dev-12345.okta.com"
-
-  settings = {
-    # `type=okta` sym_integrations have a required setting `api_token_secret`,
-    # which must point to a sym_secret referencing your Okta API Key
-    api_token_secret = sym_secret.okta_api_key.id
-  }
-}
-
 # An AWS Secrets Manager Secret to hold your Okta API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/okta-api-key" --secret-string "YOUR-OKTA-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/okta-api-key" --secret-string "YOUR-OKTA-API-KEY"
 resource "aws_secretsmanager_secret" "okta_api_key" {
-  name        = "${local.environment_name}/okta-api-key"
+  name        = "sym/${local.environment_name}/okta-api-key"
   description = "API Key for Sym to call Okta APIs"
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `secrets_manager_access` module in your `secrets.tf` file
     SymEnv = local.environment_name
   }
 }
@@ -32,6 +19,19 @@ resource "sym_secret" "okta_api_key" {
 
   # Name of the key in AWS Secrets Manager
   path = aws_secretsmanager_secret.okta_api_key.name
+}
+
+# The Okta Integration that your Sym Strategy uses to manage your Okta targets
+resource "sym_integration" "okta" {
+  type        = "okta"
+  name        = "${local.environment_name}-okta-integration"
+  external_id = "dev-12345.okta.com"
+
+  settings = {
+    # `type=okta` sym_integrations have a required setting `api_token_secret`,
+    # which must point to a sym_secret referencing your Okta API Key
+    api_token_secret = sym_secret.okta_api_key.id
+  }
 }
 
 resource "sym_flow" "this" {
