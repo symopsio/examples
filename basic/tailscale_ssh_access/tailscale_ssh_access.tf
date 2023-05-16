@@ -1,11 +1,11 @@
 # An AWS Secrets Manager Secret to hold your Tailscale API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "${local.environment_name}/tailscale-api-key" --secret-string "YOUR-TAILSCALE-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/tailscale-api-key" --secret-string "YOUR-TAILSCALE-API-KEY"
 resource "aws_secretsmanager_secret" "tailscale_api_key" {
-  name        = "${local.environment_name}/tailscale-api-key"
+  name        = "sym/${local.environment_name}/tailscale-api-key"
   description = "API Key for Sym to call Tailscale APIs"
 
-  # This SymEnv tag is required and MUST match the SymEnv tag in the
-  # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+  # This SymEnv tag is required and MUST match the `environment` variable
+  # passed into the `secrets_manager_access` module in your `secrets.tf` file
   tags = {
     SymEnv = local.environment_name
   }
