@@ -18,8 +18,8 @@ module "runtime_connector" {
 # Those permissions will be granted to the Runtime Connector IAM Role so that the Sym Runtime can publish to the Kinesis Firehose.
 module "kinesis_firehose_access" {
   source  = "symopsio/kinesis-firehose-addon/aws"
-  version = ">= 1.1.0"
+  version = "~> 1.1"
 
-  environment = local.environment_name
+  environment   = local.environment_name
   iam_role_name = module.runtime_connector.sym_runtime_connector_role.name
 }

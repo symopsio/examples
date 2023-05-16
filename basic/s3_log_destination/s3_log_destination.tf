@@ -4,7 +4,7 @@
 # You may declare these resources manually if you wish.
 module "kinesis_firehose_connector" {
   source  = "symopsio/kinesis-firehose-connector/aws"
-  version = ">= 3.0.0"
+  version = "~> 3.0"
 
   environment = local.environment_name
 }
@@ -21,8 +21,8 @@ resource "aws_kinesis_firehose_delivery_stream" "sym_logs" {
   }
 
   tags = {
-    # This SymEnv tag is required and MUST match the SymEnv tag in the
-    # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+    # This SymEnv tag is required and MUST match the `environment` variable
+    # passed into the `kinesis_firehose_access` module in the `connectors.tf` file
     SymEnv = local.environment_name
   }
 }
