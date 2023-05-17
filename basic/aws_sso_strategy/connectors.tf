@@ -39,7 +39,7 @@ data "aws_caller_identity" "sso" {
 # The AWS IAM Resources that enable Sym to manage SSO Permission Sets
 module "sso_connector" {
   source  = "symopsio/sso-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
   # Provision the SSO connector in the AWS account where your AWS
   # SSO instance lives.

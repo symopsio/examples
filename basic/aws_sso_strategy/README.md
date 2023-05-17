@@ -1,6 +1,6 @@
 # AWS IAM Identity Center (AWS SSO) Access Strategy
 
-This example illustrates how to implement a Sym Flow that uses an AWS IAM Identity Center (AWS SSO) Strategy to grant users temporary access to an AWS Permission Set.
+This example illustrates how to implement a Sym Flow that uses an AWS IAM Identity Center (AWS SSO) Strategy to grant users temporary access to an AWS Permission Set or an AWS SSO Group.
 
 ## Tutorial
 
@@ -8,12 +8,12 @@ Check out a step-by-step tutorial [here](https://docs.symops.com/docs/aws-sso).
 
 ### A Note on AWS Profiles
 
-This example assumes you will configure Sym's runtime into one AWS account, and the SSO connector IAM role into the account where your AWS SSO instance is provisioned.
+This example assumes you will configure the Sym Runtime into one AWS account, and the SSO connector IAM role into the account where your AWS SSO instance is provisioned.
 
 You should update the provider configurations for each as necessary:
 
 ```hcl
-# Set up this AWS provider for the AWS account where Sym's runtime and any other
+# Set up this AWS provider for the AWS account where the Sym Runtime and any other
 # supporting resources for Sym can go, like reporting streams with AWS Kinesis.
 provider "aws" {
   region = "us-east-1"
