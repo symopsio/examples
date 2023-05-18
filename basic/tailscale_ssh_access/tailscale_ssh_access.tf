@@ -1,11 +1,11 @@
 # An AWS Secrets Manager Secret to hold your Tailscale API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/tailscale-api-key" --secret-string "YOUR-TAILSCALE-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/tailscale-api-key" --secret-string "YOUR-TAILSCALE-API-KEY"
 resource "aws_secretsmanager_secret" "tailscale_api_key" {
-  name        = "main/tailscale-api-key"
+  name        = "sym/${local.environment_name}/tailscale-api-key"
   description = "API Key for Sym to call Tailscale APIs"
 
-  # This SymEnv tag is required and MUST match the SymEnv tag in the 
-  # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
+  # This SymEnv tag is required and MUST match the `environment` variable
+  # passed into the `secrets_manager_access` module in your `secrets.tf` file
   tags = {
     SymEnv = local.environment_name
   }
@@ -23,7 +23,7 @@ resource "sym_secret" "tailscale_api_key" {
 
 resource "sym_integration" "tailscale" {
   type        = "tailscale"
-  name        = "main-tailscale-integration"
+  name        = "${local.environment_name}-tailscale-integration"
   external_id = "example.com" # The external_id is the unique name of your Tailscale network
 
   settings = {
@@ -39,7 +39,7 @@ resource "sym_integration" "tailscale" {
 # A target Tailscale group that your Sym Strategy can manage access to
 resource "sym_target" "tailscale_prod_group" {
   type  = "tailscale_group"
-  name  = "main-prod-access"
+  name  = "${local.environment_name}-prod-access"
   label = "Prod SSH Access"
 
   settings = {
@@ -56,7 +56,7 @@ resource "sym_target" "tailscale_prod_group" {
 # A target Tailscale group that your Sym Strategy can manage access to
 resource "sym_target" "tailscale_staging_group" {
   type  = "tailscale_group"
-  name  = "main-staging-access"
+  name  = "${local.environment_name}-staging-access"
   label = "Staging SSH Access"
 
   settings = {
@@ -73,7 +73,7 @@ resource "sym_target" "tailscale_staging_group" {
 # The Strategy your Flow uses to escalate to Tailscale Groups
 resource "sym_strategy" "tailscale" {
   type           = "tailscale"
-  name           = "main-tailscale-strategy"
+  name           = "${local.environment_name}-tailscale-strategy"
   integration_id = sym_integration.tailscale.id
 
   # This must be a list of `tailscale_group` sym_target that users can request to be escalated to
@@ -86,7 +86,7 @@ resource "sym_flow" "this" {
   name  = "tailscale-ssh-access"
   label = "Tailscale SSH Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
