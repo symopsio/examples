@@ -10,7 +10,6 @@ provider "sym" {
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
   name            = local.environment_name
-  runtime_id      = sym_runtime.this.id
   error_logger_id = sym_error_logger.slack.id
 
   # All requests in this environment will be logged and sent to these log destinations
