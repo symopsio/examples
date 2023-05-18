@@ -9,8 +9,9 @@ provider "sym" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = local.environment_name
-  error_logger_id = sym_error_logger.slack.id
+  name                = local.environment_name
+  error_logger_id     = sym_error_logger.slack.id
+  log_destination_ids = [sym_log_destination.s3_firehose.id]
 
   integrations = {
     slack_id = sym_integration.slack.id
