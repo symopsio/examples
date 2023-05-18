@@ -1,10 +1,10 @@
 # An AWS Secrets Manager Secret to hold your PagerDuty API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/pagerduty-api-key" --secret-string "YOUR-PAGERDUTY-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "$sym/{local.environment_name}/pagerduty-api-key" --secret-string "YOUR-PAGERDUTY-API-KEY"
 resource "aws_secretsmanager_secret" "pagerduty_api_key" {
-  name        = "main/pagerduty-api-key"
+  name        = "sym/${local.environment_name}/pagerduty-api-key"
   description = "API Key for Sym to call PagerDuty APIs"
 
-  # This SymEnv tag is required and MUST match the SymEnv tag in the 
+  # This SymEnv tag is required and MUST match the SymEnv tag in the
   # aws_iam_policy.secrets_manager_access in your `secrets.tf` file
   tags = {
     SymEnv = local.environment_name
@@ -24,7 +24,7 @@ resource "sym_secret" "pagerduty_api_key" {
 # A PagerDuty Integration that can be included in your `sym_environment` to enable `sym.sdk.integrations.pagerduty` methods
 resource "sym_integration" "pagerduty" {
   type        = "pagerduty"
-  name        = "main-pagerduty-integration"
+  name        = "${local.environment_name}-pagerduty-integration"
   external_id = "sym-example.pagerduty.com"
 
   settings = {
@@ -40,7 +40,7 @@ resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
