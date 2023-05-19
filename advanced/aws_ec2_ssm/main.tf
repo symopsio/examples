@@ -1,3 +1,7 @@
+locals {
+  environment_name = "main"
+}
+
 provider "sym" {
   org = "sym-example"
 }
@@ -31,30 +35,19 @@ data "aws_caller_identity" "sso" {
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
-  # Allow the runtime to assume roles in the AWS Account ID where your SSO
-  # instance is provisioned.
+  # Allow the runtime to assume roles in the AWS Account ID where your SSO instance is provisioned.
   account_id_safelist = [data.aws_caller_identity.sso.account_id]
-  environment         = "main"
+  environment         = local.environment_name
 
   tags = var.tags
-}
-
-# An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime_connector module)
-resource "sym_integration" "runtime_context" {
-  type = "permission_context"
-  name = "main-runtime"
-
-  external_id = module.runtime_connector.settings.account_id
-  settings    = module.runtime_connector.settings
 }
 
 # The AWS IAM Resources that enable Sym to manage SSO Permission Sets
 module "sso_connector" {
   source  = "symopsio/sso-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
   # Provision the SSO connector in the AWS account where your AWS
   # SSO instance lives.
@@ -62,8 +55,8 @@ module "sso_connector" {
     aws = aws.sso
   }
 
-  environment       = "main"
-  runtime_role_arns = [module.runtime_connector.settings["role_arn"]]
+  environment       = local.environment_name
+  runtime_role_arns = [module.runtime_connector.sym_runtime_connector_role.arn]
 
   tags = var.tags
 }
@@ -71,7 +64,7 @@ module "sso_connector" {
 # The Integration your Strategy uses to manage SSO Permission Sets
 resource "sym_integration" "sso_context" {
   type        = "permission_context"
-  name        = "main-sso"
+  name        = "${local.environment_name}-sso"
   external_id = module.sso_connector.settings["instance_arn"]
   settings    = module.sso_connector.settings
 }
@@ -100,7 +93,7 @@ resource "sym_target" "frontend_ssh" {
 # The Strategy your Flow uses to escalate to AWS SSO Permission Sets
 resource "sym_strategy" "aws_sso" {
   type           = "aws_sso"
-  name           = "main-aws-sso"
+  name           = "${local.environment_name}-aws-sso"
   integration_id = sym_integration.sso_context.id
 
   # This must be a list of `aws_sso_permission_set` sym_targets that users can request to be escalated to
@@ -115,7 +108,7 @@ resource "sym_flow" "this" {
   name  = "aws_sso"
   label = "AWS SSO Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   params {
@@ -147,8 +140,8 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = "main"
-  runtime_id      = sym_runtime.this.id
+  name            = local.environment_name
+  runtime_id      = module.runtime_connector.sym_runtime.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -158,7 +151,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "${local.environment_name}-slack"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
@@ -169,11 +162,4 @@ resource "sym_integration" "slack" {
 resource "sym_error_logger" "slack" {
   integration_id = sym_integration.slack.id
   destination    = "#sym-errors"
-}
-
-resource "sym_runtime" "this" {
-  name = "main"
-
-  # Give the Sym Runtime the permissions defined by the runtime_connector module.
-  context_id = sym_integration.runtime_context.id
 }
