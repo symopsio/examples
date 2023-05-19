@@ -90,7 +90,7 @@ resource "sym_flow" "this" {
   name  = "ci-approval"
   label = "CI Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   params {
