@@ -5,11 +5,10 @@ locals {
 provider "sym" {
   org = "sym-example"
 }
-
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = "main"
+  name            = local.environment_name
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -26,7 +25,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "${local.environment_name}-slack"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
