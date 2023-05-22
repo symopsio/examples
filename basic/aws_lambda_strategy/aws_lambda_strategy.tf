@@ -1,42 +1,3 @@
-# In this example, we are terraform a basic lambda function that just prints the event on escalate/de-escalate
-# Replace references to `module.lambda_function` with your custom AWS Lambda
-module "lambda_function" {
-  source  = "terraform-aws-modules/lambda/aws"
-  version = "2.36.0"
-
-  function_name = "your_lambda"
-  description   = "A Lambda to be invoked on escalate and de-escalate"
-  handler       = "handler.lambda_handler"
-  runtime       = "python3.8"
-
-  source_path = "${path.module}/lambda_src"
-}
-
-# The AWS IAM Resources that enable Sym to invoke your Lambda functions.
-module "lambda_connector" {
-  source  = "symopsio/lambda-connector/aws"
-  version = ">= 1.0.0"
-
-  environment       = "main"
-  lambda_arns       = [module.lambda_function.lambda_function_arn]
-
-  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
-  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
-}
-
-# The Integration your Strategy uses to invoke Lambdas.
-# It points to to the AWS IAM resources created by the `lambda_connector` module.
-# This integration provides your Strategy the permissions needed to invoke your Lambda.
-resource "sym_integration" "lambda_context" {
-  type = "permission_context"
-  name = "lambda-context-main"
-
-  external_id = module.lambda_connector.settings.account_id
-  settings    = module.lambda_connector.settings
-}
-
-############ Lambda Strategy Setup ##############
-
 # A target AWS Lambda that will be invoked on escalate and de-escalate.
 # The `name` will be used in the lambda to decide which resource to manage access to
 resource "sym_target" "super-secret-button" {
@@ -54,7 +15,7 @@ resource "sym_target" "super-secret-button" {
 # The Strategy your Flow uses to manage access
 resource "sym_strategy" "lambda" {
   type = "aws_lambda"
-  name = "main-lambda-strategy"
+  name = "${local.environment_name}-lambda-strategy"
 
   # The integration
   integration_id = sym_integration.lambda_context.id
@@ -66,7 +27,7 @@ resource "sym_flow" "this" {
   name  = "aws-lambda"
   label = "Super Secret Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
