@@ -24,7 +24,7 @@ module "runtime_connector" {
 # AWS account from your AWS SSO instance.
 provider "aws" {
   alias  = "sso"
-  region = "us-east-1"
+  region = local.aws_region
 
   # Change this profile name to a valid AWS profile for the AWS account where
   # your AWS SSO instance lives.
