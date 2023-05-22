@@ -25,7 +25,7 @@ module "lambda_function" {
 # The AWS IAM Resources that enable Sym to invoke your Lambda functions.
 module "lambda_connector" {
   source  = "symopsio/lambda-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 1.0"
 
   environment = local.environment_name
   lambda_arns = [module.lambda_function.lambda_function_arn]
