@@ -6,39 +6,40 @@ provider "aws" {
   region = "us-east-1"
 }
 
+locals {
+  environment_name = "main"
+}
+
 ############ General AWS Secrets Manager Setup ##############
 
-# Creates an AWS IAM Role that the Sym Runtime can use for execution
-# Allow the runtime to assume roles in the /sym/ path in your AWS Account
+# The runtime_connector module creates an IAM Role that the Sym Runtime can assume to execute operations in your AWS account.
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
-  # The aws/secretsmgr addon is required to access secrets
-  addons = ["aws/secretsmgr"]
-
-  environment = "main"
+  environment = local.environment_name
 }
 
-# An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime_connector module)
-resource "sym_integration" "runtime_context" {
-  type = "permission_context"
-  name = "runtime-main"
+# This secrets_manager_access module defines an AWS IAM Policy and attachment that grants the Sym Runtime Role
+# the permissions to read secrets from AWS Secrets Manager that are under the /sym/ path and tagged with
+# `SymEnv = local.environment`.
+module "secrets_manager_access" {
+  source  = "symopsio/secretsmgr-addon/aws"
+  version = "~> 1.1"
 
-  external_id = module.runtime_connector.settings.account_id
-  settings    = module.runtime_connector.settings
-
+  environment   = local.environment_name
+  iam_role_name = module.runtime_connector.sym_runtime_connector_role.name
 }
 
-
-# This resource tells Sym which role to use to access your AWS Secrets Manager
+# This resource tells Sym how to access your AWS account's Secrets Manager instance.
 resource "sym_secrets" "this" {
   type = "aws_secrets_manager"
-  name = "main"
+  name = "${local.environment_name}-sym-secrets"
 
   settings = {
-    context_id = sym_integration.runtime_context.id
+    # This tells Sym to use the sym_integration defined in the runtime_connector module when accessing
+    # your AWS account's Secrets Manager.
+    context_id = module.runtime_connector.sym_integration.id
   }
 }
 
@@ -47,16 +48,16 @@ resource "sym_secrets" "this" {
 # An AWS Secrets Manager Secret to hold your Okta API Key.
 # This will be used by Sym `on_approve` hook to resume the CircleCI workflow.
 # Set the value with:
-# aws secretsmanager put-secret-value --secret-id "sym/main/circleci-api-key" --secret-string "YOUR-CIRCLECI-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/circleci-api-key" --secret-string "YOUR-CIRCLECI-API-KEY"
 
 resource "aws_secretsmanager_secret" "circleci_api_key" {
-  name        = "sym/main/circleci-api-key"
+  name        = "sym/${local.environment_name}/circleci-api-key"
   description = "CircleCI API key for the Sym deploy flow"
 
   tags = {
     # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
     # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
-    "SymEnv" = "main"
+    "SymEnv" = local.environment_name
   }
 }
 
@@ -89,7 +90,7 @@ resource "sym_flow" "this" {
   name  = "ci-approval"
   label = "CI Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   params {
@@ -126,7 +127,7 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = "main"
+  name            = local.environment_name
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -137,7 +138,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "${local.environment_name}-slack"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
