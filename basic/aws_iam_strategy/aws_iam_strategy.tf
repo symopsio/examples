@@ -1,22 +1,3 @@
-# The AWS IAM Resources that enable Sym to manage IAM Groups
-module "iam_connector" {
-  source  = "symopsio/iam-connector/aws"
-  version = ">= 1.0.0"
-
-  environment       = "main"
-
-  # The aws_iam_role.sym_runtime_connector_role resource is defined in `runtime.tf`
-  runtime_role_arns = [aws_iam_role.sym_runtime_connector_role.arn]
-}
-
-# The Integration your Strategy uses to manage IAM Groups
-resource "sym_integration" "iam_context" {
-  type        = "permission_context"
-  name        = "main-iam"
-  external_id = module.iam_connector.settings.account_id
-  settings    = module.iam_connector.settings
-}
-
 ############ IAM Strategy Setup ##############
 
 # A target AWS IAM Group that your Sym Strategy can manage access to
@@ -38,7 +19,7 @@ resource "sym_target" "cloudwatch_readonly" {
 # The Strategy your Flow uses to escalate to AWS IAM Groups
 resource "sym_strategy" "aws_iam" {
   type           = "aws_iam"
-  name           = "main-aws-iam"
+  name           = "${local.environment_name}-aws-iam"
   integration_id = sym_integration.iam_context.id
 
   # This must be a list of `aws_iam_group` sym_targets that users can request to be escalated to
@@ -49,7 +30,7 @@ resource "sym_flow" "this" {
   name  = "aws_iam"
   label = "AWS IAM Group Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
 
   # The sym_environment resource is defined in `environment.tf`
   environment_id = sym_environment.this.id
