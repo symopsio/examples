@@ -6,52 +6,56 @@ provider "aws" {
   region = "us-east-1"
 }
 
+locals {
+  environment_name = "main"
+}
+
 ############ General AWS Secrets Manager Setup ##############
 
 # Creates an AWS IAM Role that the Sym Runtime can use for execution
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
-  # The aws/secretsmgr addon is required to access secrets
-  addons = ["aws/secretsmgr"]
-
-  environment = "main"
+  environment = local.environment_name
 }
 
-# An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime_connector module)
-resource "sym_integration" "runtime_context" {
-  type = "permission_context"
-  name = "main-runtime"
+# This secrets_manager_access module defines an AWS IAM Policy and attachment that grants the Sym Runtime Role
+# the permissions to read secrets from AWS Secrets Manager that are under the /sym/ path and tagged with
+# `SymEnv = local.environment`.
+module "secrets_manager_access" {
+  source  = "symopsio/secretsmgr-addon/aws"
+  version = "~> 1.1"
 
-  external_id = module.runtime_connector.settings.account_id
-  settings    = module.runtime_connector.settings
+  environment   = local.environment_name
+  iam_role_name = module.runtime_connector.sym_runtime_connector_role.name
 }
 
-# This resource tells Sym which role to use to access your AWS Secrets Manager
+# This resource tells Sym how to access your AWS account's Secrets Manager instance.
 resource "sym_secrets" "this" {
   type = "aws_secrets_manager"
-  name = "main-sym-secrets"
+  name = "${local.environment_name}-sym-secrets"
 
   settings = {
-    context_id = sym_integration.runtime_context.id
+    # This tells Sym to use the sym_integration defined in the runtime_connector module when accessing
+    # your AWS account's Secrets Manager.
+    context_id = module.runtime_connector.sym_integration.id
   }
 }
 
 ############ Custom Integration and Secret Setup ##############
 
 # An AWS Secrets Manager Secret to hold your VictorOps API Key. Set the value with:
-# aws secretsmanager put-secret-value --secret-id "main/victorops-api-key" --secret-string "YOUR-VICTOROPS-API-KEY"
+# aws secretsmanager put-secret-value --secret-id "sym/${local.environment_name}/victorops-api-key" --secret-string "YOUR-VICTOROPS-API-KEY"
 resource "aws_secretsmanager_secret" "victorops_api_key" {
-  name        = "main/victorops-api-key"
+  name        = "sym/${local.environment_name}/victorops-api-key"
   description = "API Key for Sym to call VictorOps APIs"
 
   # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
   # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
   tags = {
-    SymEnv = "main"
+    SymEnv = local.environment_name
   }
 }
 
@@ -69,7 +73,7 @@ resource "sym_secret" "victorops_api_key" {
 # the SDK and configure user mappings when necessary
 resource "sym_integration" "victorops" {
   type        = "custom"
-  name        = "main-victorops-integration"
+  name        = "${local.environment_name}-victorops-integration"
   external_id = "9sr1wzgcxfo580c1pna4a55to" # VictorOps API ID
 
   settings = {
@@ -84,7 +88,7 @@ resource "sym_flow" "this" {
   name  = "approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   params {
@@ -111,7 +115,7 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = "main"
+  name            = local.environment_name
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -124,7 +128,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "main-slack"
+  name = "${local.environment_name}-slack"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
