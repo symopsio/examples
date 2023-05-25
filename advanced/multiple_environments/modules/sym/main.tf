@@ -2,7 +2,7 @@ resource "sym_flow" "this" {
   name  = "${var.environment_name}-approval"
   label = "Approval"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   vars = var.flow_variables
