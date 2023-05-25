@@ -52,8 +52,9 @@ resource "aws_secretsmanager_secret" "victorops_api_key" {
   name        = "sym/${local.environment_name}/victorops-api-key"
   description = "API Key for Sym to call VictorOps APIs"
 
-  # This SymEnv tag is required and MUST match the `environment` in your `runtime_connector` module
-  # because the aws/secretsmgr only grants access to secrets tagged with a matching SymEnv value
+  # This SymEnv tag is required and MUST match the `environment` variable
+  # passed into the `secrets_manager_access` module in your `secrets.tf` file
+  # because the module only grants access to secrets tagged with a matching SymEnv value
   tags = {
     SymEnv = local.environment_name
   }
