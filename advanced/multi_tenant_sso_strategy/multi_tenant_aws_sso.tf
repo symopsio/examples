@@ -1,7 +1,7 @@
 locals {
   aws_region = "us-east-1"
 
-  customer_connector_roles = [
+  customer_sso_account_ids = [
     for tenant_slug, tenant_settings in var.customer_tenants : tenant_settings["sso_account_id"]
   ]
 }
@@ -17,7 +17,7 @@ module "runtime_connector" {
   environment = local.environment_name
 
   # Allow the Runtime Connector Role to assume IAM Roles in each customer SSO Account as well.
-  account_id_safelist = local.customer_connector_roles
+  account_id_safelist = local.customer_sso_account_ids
 }
 
 
