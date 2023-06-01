@@ -6,6 +6,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+locals {
+  environment_name = "main"
+}
+
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
@@ -24,31 +28,21 @@ module "db" {
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 2.0"
 
-  environment = "main"
+  environment = local.environment_name
 
   tags = var.tags
-}
-
-# An Integration that tells the Sym Runtime resource which AWS Role to assume
-# (The AWS Role created by the runtime_connector module)
-resource "sym_integration" "runtime_context" {
-  type = "permission_context"
-  name = "runtime-main"
-
-  external_id = module.runtime_connector.settings.account_id
-  settings    = module.runtime_connector.settings
 }
 
 # The AWS IAM Resources that enable Sym to invoke your Lambda functions.
 module "lambda_connector" {
   source  = "symopsio/lambda-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 1.0.0"
 
-  environment       = "main"
+  environment       = local.environment_name
   lambda_arns       = [module.mysql_lambda_function.lambda_function_arn]
-  runtime_role_arns = [module.runtime_connector.settings.role_arn]
+  runtime_role_arns = [module.runtime_connector.sym_runtime_connector_role.arn]
 
   tags = var.tags
 }
@@ -58,7 +52,7 @@ module "lambda_connector" {
 # This integration provides your Strategy the permissions needed to invoke your Lambda.
 resource "sym_integration" "lambda_context" {
   type = "permission_context"
-  name = "lambda-context-main"
+  name = "${local.environment_name}-lambda-context"
 
   external_id = module.lambda_connector.settings.account_id
   settings    = module.lambda_connector.settings
@@ -83,7 +77,7 @@ resource "sym_target" "readonly" {
 # The Strategy your Flow uses to manage access
 resource "sym_strategy" "lambda" {
   type = "aws_lambda"
-  name = "lambda-strategy-main"
+  name = "${local.environment_name}-lambda-strategy"
 
   # The integration containing the permission context necessary to invoke your lambda
   integration_id = sym_integration.lambda_context.id
@@ -95,7 +89,7 @@ resource "sym_flow" "this" {
   name  = "mysql"
   label = "MySQL Access"
 
-  implementation = "${path.module}/impl.py"
+  implementation = file("${path.module}/impl.py")
   environment_id = sym_environment.this.id
 
   params {
@@ -126,8 +120,8 @@ resource "sym_flow" "this" {
 # The sym_environment is a container for sym_flows that share configuration values
 # (e.g. shared integrations or error logging)
 resource "sym_environment" "this" {
-  name            = "main"
-  runtime_id      = sym_runtime.this.id
+  name            = local.environment_name
+  runtime_id      = module.runtime_connector.sym_runtime.id
   error_logger_id = sym_error_logger.slack.id
 
   integrations = {
@@ -137,7 +131,7 @@ resource "sym_environment" "this" {
 
 resource "sym_integration" "slack" {
   type = "slack"
-  name = "slack-main"
+  name = "${local.environment_name}-slack"
 
   # The external_id for slack integrations is the Slack Workspace ID
   external_id = "T123ABC"
@@ -148,11 +142,4 @@ resource "sym_integration" "slack" {
 resource "sym_error_logger" "slack" {
   integration_id = sym_integration.slack.id
   destination    = "#sym-errors"
-}
-
-resource "sym_runtime" "this" {
-  name = "main"
-
-  # Give the Sym Runtime the permissions defined by the runtime_connector module.
-  context_id = sym_integration.runtime_context.id
 }
