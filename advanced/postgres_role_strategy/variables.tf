@@ -8,7 +8,7 @@ variable "db_config" {
 variable "db_enabled" {
   description = "Whether or not to create a database to use with the integration"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "security_group_ids" {
