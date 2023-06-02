@@ -2,6 +2,10 @@
 
 This example illustrates how to implement a Sym Flow that grants temporary access to an S3 Bucket that is managed with a [K9 Security](https://www.k9security.io/) least-privilege bucket policy.
 
+**Update (June 1, 2023)**
+In April 2023, AWS made security changes to S3. Please note that while the modules used in this example are now outdated and will not apply as-is, 
+the concepts illustrated in this example are still valid, and may be used as a guideline for your own custom implementations.
+
 ## Blog
 
 We discuss this example in more detail on our [blog](https://blog.symops.com/2022/11/10/stop-playing-whac-a-mole-start-using-least-privilege/).
