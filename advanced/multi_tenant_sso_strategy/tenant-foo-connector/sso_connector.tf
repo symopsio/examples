@@ -25,7 +25,6 @@ module "sso_connector" {
   runtime_role_arns = ["arn:aws:iam::803477428605:role/sym/SymRuntimeSSOExample"]
 }
 
-# The following
 # Output values:
 # cloud         = "aws"
 # instance_arn  = The SSO Instance ARN
