@@ -6,9 +6,10 @@ class CustomStrategy(AccessStrategy):
     def fetch_remote_identity(self, user):
         """This method determines how to identify this Sym user in the third party system.
 
-        For this example, we'll use the user's email address.
+        For this example, we'll use the user's email address to look up their ID.
         """
-        return user.email
+        output = requests.get("https://some-api.invalid/user-search", params={"email": user.email})
+        return output.json()["id"]
 
     def headers(self):
         """This is a helper method to generate the headers needed to authenticate with the
@@ -26,7 +27,8 @@ class CustomStrategy(AccessStrategy):
         """This method executes after a user's request has been approved. It should elevate
         their permissions in the third party system.
         """
-        # Get the user's identity in the third party system (in this case, their email).
+        # Get the user's identity in the third party system, which is either already available
+        # if we have looked up their ID before, or will be fetched using `fetch_remote_identity`.
         requester = self.get_requester_identity(event)
 
         # To use the identifier from `sym_target.settings.identifier`, we need to fetch the target object.
@@ -44,7 +46,8 @@ class CustomStrategy(AccessStrategy):
         """This method executes after a user's request has expired, or during a 'Revoke' event.
         It should deescalate their permissions in the third party system.
         """
-        # Get the user's identity in the third party system (in this case, their email).
+        # Get the user's identity in the third party system, which is either already available
+        # if we have looked up their ID before, or will be fetched using `fetch_remote_identity`.
         requester = self.get_requester_identity(event)
 
         # To use the identifier from `sym_target.settings.identifier`, we need to fetch the target object.
