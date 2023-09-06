@@ -34,7 +34,7 @@ resource "sym_integration" "knowbe4" {
     # which must point to a sym_secret referencing your KnowBe4 API Key
     api_token_secret = sym_secret.knowbe4_api_key.id
     # `type=knowbe4` sym_integrations have a required setting `region`,
-    # which must be one of ["us", "eu", "ca", "uk", "de"]
+    # which must be one of "us", "eu", "ca", "uk", "de"
     region = "us"
   }
 }

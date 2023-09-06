@@ -21,7 +21,7 @@ Each folder in this repo represents a full end to end Sym Flow.
 | [Datadog Log Destination](basic/datadog_log_destination)                     | A Sym Environment configured to send logs to Datadog via AWS Kinesis Firehose             |
 | [GitHub Access Strategy](basic/github_access_strategy)                       | A Sym Flow that escalates the requester to a GitHub Repository                            |
 | [GitHub Access Strategy with Dynamic Targets](basic/github_dynamic_targets)  | A GitHub Access Strategy that uses Dynamic Targets to populate the repository name        |
-| [KnowBe4 SDK Integration](basic/knowbe4_training)     | Use the KnowBe4 SDK to auto-approve requests if the requestor completed specific training |
+| [KnowBe4 SDK Integration](basic/knowbe4_training)     | Use the KnowBe4 SDK to auto-approve requests if the requester completed specific training |
 | [Okta Group Escalation](basic/okta_access_strategy)                          | A Sym Flow that escalates the requester to an Okta Group                                  |
 | [Okta SDK Integration](basic/okta_sdk)                                       | Use the Okta SDK to create custom auth hooks and to get user profile data                 |
 | [Auto-approve PagerDuty On-call Engineer](basic/pagerduty_on_call)           | A Sym Flow that auto-approves requests if the requester is on-call in PagerDuty           |
