@@ -1,8 +1,7 @@
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
 from sym.sdk.templates import ApprovalTemplate
-from sym.sdk.notifications import Notification
-from sym.sdk.request_permission import PermissionLevel, RequestPermission
+
 
 @reducer
 def get_permissions(event):
@@ -10,7 +9,7 @@ def get_permissions(event):
     return RequestPermission(
         webapp_view=PermissionLevel.ADMIN,
         approve_deny=PermissionLevel.MEMBER,
-        allow_self_approval=False
+        allow_self_approval=True
     )
 
 @reducer
