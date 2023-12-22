@@ -8,16 +8,16 @@ from sym.sdk.request_permission import PermissionLevel, RequestPermission
 # Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
 def get_permissions(event):
-    """
-    approve_deny is set here to allow only the users in the sym-requests slack channel to approve or deny a request
-    allow_self lets the requester approve themself, which is great for testing!
-    """
+    """Decide who can see and take actions on requests."""
 
     flow_vars = event.flow.vars
 
     return RequestPermission(
+        # Only admins may view this request in Sym's web app.
         webapp_view=PermissionLevel.ADMIN,
+        # Only member may approve or deny requests.
         approve_deny=slack.users_in_channel(flow_vars["request_channel"]),
+        # allow_self_approval lets users approve their own requests. This is great for testing!
         allow_self_approval=True
     )
 
