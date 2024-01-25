@@ -23,7 +23,7 @@ def get_request_notifications(event):
     """Decide where notifications about new requests are sent."""
 
     flow_vars = event.flow.vars
-    # Send new Sym requests to the Slack Channel specified in the event.
+    # Send new Sym requests to a channel specified in the sym_flow in Terraform.
     return [Notification(destinations=[slack.channel(flow_vars["request_channel"])])]
 
 
