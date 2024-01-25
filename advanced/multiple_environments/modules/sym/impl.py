@@ -16,7 +16,7 @@ def get_permissions(event):
         # Only admins may view this request in Sym's web app.
         webapp_view=PermissionLevel.ADMIN,
         # Only member may approve or deny requests.
-        approve_deny=slack.users_in_channel(flow_vars["request_channel"]),
+        approve_deny=PermissionLevel.MEMBER,
         # allow_self_approval lets users approve their own requests. This is great for testing!
         allow_self_approval=True
     )
@@ -27,7 +27,7 @@ def get_request_notifications(event):
 
     flow_vars = event.flow.vars
 
-    # Send new Sym requests to the Slack channel where the request was made.
+    # Send new Sym requests to a channel specified in the sym_flow in Terraform.
     return [Notification(destinations=[slack.channel(flow_vars["request_channel"])])]
 
 
