@@ -23,10 +23,11 @@ def get_permissions(event):
 
 @reducer
 def get_request_notifications(event):
-    """Send Sym requests to the sym-requests slack channel"""
+    """Decide where notifications about new requests are sent."""
 
     flow_vars = event.flow.vars
 
+    # Send new Sym requests to the Slack channel where the request was made.
     return [Notification(destinations=[slack.channel(flow_vars["request_channel"])])]
 
 

@@ -26,12 +26,15 @@ def get_permissions(event):
 
 @reducer
 def get_request_notifications(event):
-    """Send Sym requests to the sym-requests slack channel"""
+    """Decide where notifications about new requests are sent."""
+
     notifications = []
     department = get_user_department(event.user)
     if department == "engineering":
+        # Send new Sym requests to the #eng-requests Slack channel.
         notifications.append(Notification(destinations=[slack.channel("#eng-requests")]))
     else:
+        # Send new Sym requests to the #sym-requests Slack channel.
         notifications.append(Notification(destinations=[slack.channel("#sym-requests")]))
 
     return notifications
