@@ -32,7 +32,7 @@ data "aws_caller_identity" "sso" {
 # Allow the runtime to assume roles in the /sym/ path in your AWS Account
 module "runtime_connector" {
   source  = "symopsio/runtime-connector/aws"
-  version = ">= 1.0.0"
+  version = "~> 1.0.0"
 
   # Allow the runtime to assume roles in the AWS Account ID where your SSO
   # instance is provisioned.

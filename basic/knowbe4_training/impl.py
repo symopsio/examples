@@ -2,15 +2,30 @@ from sym.sdk.annotations import hook, reducer
 from sym.sdk.exceptions import SymException
 from sym.sdk.integrations import knowbe4, slack
 from sym.sdk.templates import ApprovalTemplate
+from sym.sdk.notifications import Notification
+from sym.sdk.request_permission import PermissionLevel, RequestPermission
 
 
 # Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
-def get_approvers(event):
-    """Route Sym requests to a channel specified in the sym_flow."""
+def get_permissions(event):
+    """Decide who can see and take actions on requests."""
 
-    # allow_self lets the requester approve themselves, which is great for testing!
-    return slack.channel("#sym-requests", allow_self=True)
+    return RequestPermission(
+        # Only admins may view this request in Sym's web app.
+        webapp_view=PermissionLevel.ADMIN,
+        # Only member may approve or deny requests.
+        approve_deny=PermissionLevel.MEMBER,
+        # allow_self_approval lets users approve their own requests. This is great for testing!
+        allow_self_approval=True
+    )
+
+@reducer
+def get_request_notifications(event):
+    """Decide where notifications about new requests are sent."""
+
+    # Send new Sym requests to the #sym-requests Slack channel.
+    return [Notification(destinations=[slack.channel("#sym-requests")])]
 
 @hook
 def on_request(event):

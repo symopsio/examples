@@ -2,14 +2,31 @@ import requests
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
 from sym.sdk.templates import ApprovalTemplate
+from sym.sdk.notifications import Notification
+from sym.sdk.request_permission import PermissionLevel, RequestPermission
 
 
 # Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
-def get_approvers(event):
-    """Route Sym requests to a specified channel."""
+def get_permissions(event):
+    """Decide who can see and take actions on requests."""
 
-    return slack.channel("#circleci-deploys")
+    return RequestPermission(
+        # Only admins may view this request in Sym's web app.
+        webapp_view=PermissionLevel.ADMIN,
+        # Only member may approve or deny requests.
+        approve_deny=PermissionLevel.MEMBER,
+        # allow_self_approval lets users approve their own requests. This is great for testing!
+        allow_self_approval=False
+    )
+
+@reducer
+def get_request_notifications(event):
+    """Decide where notifications about new requests are sent."""
+
+    # Send new Sym requests to the #circleci-deploys Slack channel.
+    return [Notification(destinations=[slack.channel("#circleci-deploys")])]
+
 
 
 def find_circleci_approval_job(session, workflow_id):

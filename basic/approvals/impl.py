@@ -1,17 +1,30 @@
 from sym.sdk.annotations import hook, reducer
 from sym.sdk.integrations import slack
 from sym.sdk.templates import ApprovalTemplate
+from sym.sdk.notifications import Notification
+from sym.sdk.request_permission import PermissionLevel, RequestPermission
 
 
-# Reducers fill in the blanks that your workflow needs in order to run.
 @reducer
-def get_approvers(event):
-    """Route Sym requests to a channel specified in the sym_flow."""
+def get_permissions(event):
+    """Decide who can see and take actions on requests."""
+
+    return RequestPermission(
+        # Only admins may view this request in Sym's web app.
+        webapp_view=PermissionLevel.ADMIN,
+        # Only member may approve or deny requests.
+        approve_deny=PermissionLevel.MEMBER,
+        # allow_self_approval lets users approve their own requests. This is great for testing!
+        allow_self_approval=True
+    )
+
+@reducer
+def get_request_notifications(event):
+    """Decide where notifications about new requests are sent."""
 
     flow_vars = event.flow.vars
-
-    # allow_self lets the requester approve themself, which is great for testing!
-    return slack.channel(flow_vars["request_channel"], allow_self=True)
+    # Send new Sym requests to a channel specified in the sym_flow in Terraform.
+    return [Notification(destinations=[slack.channel(flow_vars["request_channel"])])]
 
 
 # Hooks let you change the control flow of your workflow.
