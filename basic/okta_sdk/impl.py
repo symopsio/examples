@@ -11,9 +11,13 @@ def get_permissions(event):
     """Decide who can see and take actions on requests."""
 
     department = get_user_department(event.user)
-    approve_deny = slack.users_in_channel("#sym-requests")
+    engineering_managers_okta_group_id = "00g12345"
+    other_managers_okta_group_id = "00g9876"
+
     if department == "engineering":
-        approve_deny = slack.users_in_channel("#eng-requests")
+        approve_deny = user_ids(okta.users_in_group(group_id=engineering_managers_okta_group_id))
+    else:
+        approve_deny = user_ids(okta.users_in_group(group_id=other_managers_okta_group_id))
 
     return RequestPermission(
         # Only admins may view this request in Sym's web app.

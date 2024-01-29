@@ -10,8 +10,6 @@ from sym.sdk.request_permission import PermissionLevel, RequestPermission
 def get_permissions(event):
     """Decide who can see and take actions on requests."""
 
-    flow_vars = event.flow.vars
-
     return RequestPermission(
         # Only admins may view this request in Sym's web app.
         webapp_view=PermissionLevel.ADMIN,
